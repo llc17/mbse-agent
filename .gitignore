@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# 产出
+outputs/
+
+# 环境
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# OpenModelica 临时文件
+*.exe
+*.log
+*.json.result
+*.mat
+*_res.csv
