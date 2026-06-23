@@ -1,0 +1,18 @@
+[project]
+name = "mbse-agent-v2"
+version = "0.2.0"
+description = "MBSE+AI 自动化闭环系统 V2 — LangGraph 状态图 + HITL + 自修复"
+requires-python = ">=3.11"
+dependencies = [
+    "requests>=2.31",
+    "pydantic>=2.0",
+    "langgraph>=0.2.0",
+    "langgraph-checkpoint>=2.0",
+    "matplotlib>=3.7",
+]
+
+[project.optional-dependencies]
+ompython = ["OMPython"]
+
+[tool.setuptools.packages.find]
+include = ["src*"]

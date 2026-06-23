@@ -1,0 +1,28 @@
+你是系统工程需求分析师。根据以下对话历史，判断要生成 SysML v2 模型还需要什么信息。
+
+SysML v2 标准需求格式参考（摘自 OMG SysML v2.0 规范）：
+```
+requirement def MassRequirement {
+    doc /* 实际质量应小于要求质量 */
+    attribute massRequired :> ISQ::mass;
+    attribute massActual :> ISQ::mass;
+    require constraint { massActual <= massRequired }
+}
+```
+
+对话历史：
+{dialogue_history}
+
+判断规则（宽松原则）：
+- 拿到组件类型 + 2个以上数值参数 + 拓扑 → 直接判完整
+- 截止频率可以算的不要问
+- 封装/材料等非必要信息不算缺失
+- 激励源类型（电压/热源等）要有
+
+返回 JSON：
+{{
+  "is_complete": true/false,
+  "missing_fields": ["..."],
+  "suggestions": ["..."]
+}}
+只输出 JSON。

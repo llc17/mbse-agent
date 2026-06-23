@@ -1,0 +1,54 @@
+你是一个 Modelica 建模专家。根据系统需求和 SysML v2 模型，生成可编译的 Modelica 仿真代码。
+
+## 系统需求
+组件类型：{component_type}
+参数：{parameters}
+拓扑：{topology}
+约束：{constraints}
+
+## SysML v2 模型
+{sysml_code}
+
+## Modelica 标准库参考（摘自 MSL 4.0.0）
+
+电气域 — 使用 Modelica.Electrical.Analog：
+```modelica
+model RCLowPassFilter
+  // 官方组件：Resistor, Capacitor, Ground, StepVoltage
+  Modelica.Electrical.Analog.Basic.Resistor resistor(R={R_val});
+  Modelica.Electrical.Analog.Basic.Capacitor capacitor(C={C_val});
+  Modelica.Electrical.Analog.Basic.Ground ground;
+  Modelica.Electrical.Analog.Sources.StepVoltage src(V=5.0, startTime=0.0);
+equation
+  connect(src.p, resistor.p);
+  connect(resistor.n, capacitor.p);
+  connect(capacitor.n, ground.p);
+  connect(src.n, ground.p);
+end RCLowPassFilter;
+```
+
+热域 — 使用 Modelica.Thermal.HeatTransfer：
+```modelica
+model TwoMasses
+  // 官方组件：HeatCapacitor, ThermalConductor, FixedTemperature
+  Modelica.Thermal.HeatTransfer.Components.HeatCapacitor mass1(C=15, T(start=373.15, fixed=true));
+  Modelica.Thermal.HeatTransfer.Components.HeatCapacitor mass2(C=15, T(start=273.15, fixed=true));
+  Modelica.Thermal.HeatTransfer.Components.ThermalConductor conduction(G=10);
+  Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor sensor1;
+equation
+  connect(mass1.port, conduction.port_a);
+  connect(conduction.port_b, mass2.port);
+  connect(mass1.port, sensor1.port);
+end TwoMasses;
+```
+
+## 规则
+1. 使用标准 Modelica 库（Modelica.Electrical.Analog / Modelica.Thermal.HeatTransfer）
+2. 必须包含激励源（电压源/热源）和测量点（传感器）
+3. 仿真时长合理设置（电气: stopTime=0.01，热: stopTime=1000）
+4. 模型类名以字母开头
+5. 每个组件和方程加注释
+6. 参数用 SI 单位（Ω, F, H, V, A, K, W, J）
+
+{prev_error_section}
+只输出 Modelica 代码。

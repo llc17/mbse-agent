@@ -1,0 +1,39 @@
+V2 可用领域说明
+===============
+
+以下领域 prompt 中包含了官方示例，LLM 有据可查。
+
+
+一、有官方示例参考的领域（生成质量相对可靠）
+
+  电气域 — RC 低通滤波器
+    来源:
+      - SysML v2: Vehicle Example 的 part def / port / connect 写法
+      - Modelica:  MSL 4.0.0 Modelica.Electrical.Analog (Resistor, Capacitor, Ground, StepVoltage)
+    可问: RC 低通/高通滤波器、分压电路、简单阻容网络
+
+  热域 — 单房间热传导
+    来源:
+      - SysML v2: Vehicle Example + 自建热域示例
+      - Modelica:  MSL 4.0.0 Modelica.Thermal.HeatTransfer.Examples.TwoMasses
+    可问: 单/双房间热传导、热阻热容网络
+
+
+二、没有官方示例的领域（LLM 凭训练记忆生成，不可靠）
+
+  以下领域 prompt 中没有参考示例，LLM 会尝试生成但质量无法保证:
+    - RLC 谐振电路（电气域，无官方 SysML 示例，Modelica 有 CauerLowPassAnalog 但未纳入 prompt）
+    - 运放/有源电路
+    - 流体系统（液压、气动）
+    - 机械传动（齿轮、连杆）
+    - 电机/发电机
+    - 多物理域耦合（电-热、机-电）
+    - 控制系统（PID、反馈）
+
+  如果你问了这些，LLM 的产出 = 猜的，可能编译不过，可能物理上错误。
+
+
+三、后续扩展
+
+  V3 计划加 3-5 个用例时会从官方库补充 RLC、双房间热传导的示例。
+  V7 RAG 知识库上线后，所有官方 MSL 和 SysML-v2-Release 里的领域都会自动覆盖。
