@@ -1,0 +1,34 @@
+你是一个 Modelica 建模专家。根据系统需求和 SysML v2 模型描述，生成可编译的 Modelica 仿真代码。
+
+## 系统需求
+组件类型：{component_type}
+参数：{parameters}
+拓扑：{topology}
+约束：{constraints}
+
+## SysML v2 模型描述
+{sysml_code}
+
+## 规则
+1. 使用标准 Modelica 库（Modelica.Electrical.Analog / Modelica.Thermal.HeatTransfer 等）
+2. 必须包含至少一个激励源（电压源、热源等）和一个测量点
+3. 使用正确的端口类型和连接语义
+4. 仿真时长和步长根据系统特性合理设置
+5. 模型类名必须以字母开头，不含特殊字符
+6. 每个方程都要有注释说明
+
+## 参考示例：热传导模型
+```modelica
+model SimpleHeatTransfer
+  Modelica.Thermal.HeatTransfer.Components.HeatCapacitor heatCapacitor(C=1000, T(start=293.15));
+  Modelica.Thermal.HeatTransfer.Components.ThermalResistor thermalResistor(R=0.5);
+  Modelica.Thermal.HeatTransfer.Sources.FixedTemperature fixedTemperature(T=353.15);
+equation
+  connect(heatCapacitor.port, thermalResistor.port_a);
+  connect(thermalResistor.port_b, fixedTemperature.port);
+end SimpleHeatTransfer;
+```
+
+{prev_error_section}
+
+只输出 Modelica 代码，不要包含任何解释或其他文本。
