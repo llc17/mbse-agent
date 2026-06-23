@@ -5,12 +5,23 @@ __pycache__/
 .venv/
 venv/
 
-# 产出
+# 运行产出
 outputs/
+modelica/
+results/
+*.csv
+*.png
+*.log
+*.mat
+*.json.result
+*_res.csv
 
 # 环境
 .env
 .env.local
+
+# API Key
+api.txt
 
 # IDE
 .vscode/
@@ -20,9 +31,12 @@ outputs/
 .DS_Store
 Thumbs.db
 
-# OpenModelica 临时文件
+# OpenModelica
 *.exe
-*.log
-*.json.result
-*.mat
-*_res.csv
+
+# Claude
+.claude/
+
+# 本地调试
+error.txt
+_sim.mos

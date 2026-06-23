@@ -1,42 +1,54 @@
 # MBSE+AI 自动化闭环系统
 
-基于 LLM Agent 的工业软件工作流，通过 "AI 生成 + 物理仿真驱动" 的自反思闭环，解决传统系统工程建模门槛高、验证脱节的问题。
+LLM Agent 驱动的系统工程建模与物理仿真自反思闭环。
 
-## 4 节点流水线
+## 项目概述
 
-| 节点 | 名称 | 输入 | 产出 |
-|------|------|------|------|
-| 1 | 需求解析 | 自然语言 | `StructuredRequirement` JSON |
-| 2 | SysML v2 生成 | StructuredRequirement | `.sysml` 文件 |
-| 3 | Modelica 仿真 | req + sysml | `.mo` + CSV + 仿真曲线 PNG |
-| 4 | 总结 | 全部产物 | `summary.md` |
+- **目标**: 用 LLM Agent 打通 "自然语言需求 → SysML v2 系统建模 → Modelica 物理仿真 → 自修复闭环"
+- **技术栈**: Python 3.13, LangGraph, DeepSeek-v4-pro, OpenModelica, SysML v2
+- **导师**: 来自 OMG SysML v2 规范的 4 节点终极目标
+
+## 版本迭代
+
+| 版本 | 周次 | 架构 | 核心能力 |
+|------|------|------|---------|
+| V1 | Week 2 | Sequential Python | 4 节点端到端跑通：需求→SysML→Modelica仿真→总结 |
+| V2 | Week 3 | LangGraph 状态图 | HITL 人机确认 + 打回机制 + 自修复子图(5次) + 实验框架 |
+
+## 仓库结构
+
+```
+├── week2/                  # V1: 第一版最丑跑通
+│   ├── src/                #   4节点 sequential 流水线
+│   ├── prompts/            #   初期 prompt 模板
+│   └── README.md
+│
+├── week3/                  # V2: LangGraph 架构升级
+│   ├── src/                #   LangGraph 状态图 + HITL + 子图
+│   ├── src_commented/      #   全量逐行中文注释版（学习用）
+│   ├── prompts/            #   参考官方库的 prompt 模板
+│   ├── experiments/        #   批量实验框架 (360次参数扫描)
+│   ├── V2-优缺点.md         #   设计决策记录
+│   └── 可用领域说明.txt     #   当前支持的物理域
+```
 
 ## 快速开始
 
 ```bash
-# 1. 设置 API Key
-export DEEPSEEK_API_KEY=sk-xxx
+# 安装依赖
+pip install langgraph langgraph-checkpoint requests pydantic matplotlib
 
-# 2. 安装依赖
-pip install -r requirements.txt
+# 配置 API Key
+set DEEPSEEK_API_KEY=your_key_here
 
-# 3. 运行
-python -m src.main
+# 交互模式（带人工确认）
+cd week3
+python src/main.py
+
+# 实验模式（自动确认，无人值守）
+python src/main.py --mode experiment
+
+# 批量实验
+python experiments/run_experiment.py --small
 ```
 
-## 项目结构
-
-```
-src/         — 所有源码
-prompts/     — LLM 提示词模板
-outputs/     — 每次运行的完整产出
-experiments/ — 失败实验归档
-docs/        — 文档
-```
-
-## 工具链
-
-- **LLM**: DeepSeek Chat API
-- **建模**: SysML v2（OMG Pilot Implementation，手动看图）
-- **仿真**: OpenModelica + OMPython
-- **数据**: Pydantic 类型校验
