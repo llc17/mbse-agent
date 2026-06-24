@@ -318,19 +318,58 @@ def _safe_str(e: Exception) -> str:
 
 def _compile(mo_path: str, model_name: str) -> tuple[bool, str]:
     """
-    编译 .mo 文件。
-    本机 omc CLI 不在 PATH，直接用 OMPython。
+    编译 .mo 文件。捕获 OMPython 日志获取真实编译错误。
+
+    关键坑: ModelicaSystem 构造失败时，Python 异常只返回
+    "Error executing buildModel(...)" —— 真正的 Modelica 语法/类型错误
+    在 OMPython 的日志里，不在异常消息里。
+    这里用 StringIO 把日志劫持下来，提取真实错误喂给 LLM。
     """
+    import io
     try:
         from OMPython import ModelicaSystem
-        # ModelicaSystem 构造时会 loadFile + 初步编译检查
-        # 如果模型有语法错误，这里会抛异常
-        ModelicaSystem(mo_path, model_name)
-        return True, ""
+
+        # 劫持 OMPython 日志 → 抓真实编译错误
+        ompy_logger = logging.getLogger("OMPython")
+        old_level = ompy_logger.level
+        ompy_logger.setLevel(logging.DEBUG)
+        log_stream = io.StringIO()
+        handler = logging.StreamHandler(log_stream)
+        handler.setLevel(logging.DEBUG)
+        ompy_logger.addHandler(handler)
+
+        try:
+            ModelicaSystem(mo_path, model_name)
+            return True, ""
+        except ImportError:
+            return False, "OMPython 未安装"
+        except Exception as e:
+            # 从 OMPython 日志提取真正的编译错误
+            log_content = log_stream.getvalue()
+            error_lines = []
+            for line in log_content.split("\n"):
+                lower = line.lower()
+                if any(kw in lower for kw in [
+                    "error", "warning", "syntax", "undefined",
+                    "unknown", "missing", "cannot", "invalid",
+                    "unmatched", "unexpected", "not found",
+                ]):
+                    if "omc log" in lower:
+                        parts = line.split("]:", 1)
+                        error_lines.append(parts[-1].strip() if len(parts) > 1 else line.strip())
+                    else:
+                        error_lines.append(line.strip())
+
+            if error_lines:
+                return False, "[OMC编译错误]\n" + "\n".join(error_lines[-10:])
+            else:
+                return False, f"[OMPython] {_safe_str(e)}"
+        finally:
+            ompy_logger.removeHandler(handler)
+            ompy_logger.setLevel(old_level)
+
     except ImportError:
         return False, "OMPython 未安装"
-    except Exception as e:
-        return False, f"[OMPython] {_safe_str(e)}"
 
 
 def _simulate(mo_path: str, model_name: str, results_dir: Path) -> tuple[bool, str]:

@@ -42,6 +42,11 @@ TEMPERATURES = [0.1, 0.3, 0.7]
 TRIALS_FULL = 30
 TRIALS_SMALL = 5
 
+# 调试用 — 单次验证
+RETRIES_SINGLE = [3]
+TEMPS_SINGLE = [0.3]
+TRIALS_SINGLE = 1
+
 
 def load_test_cases() -> list[dict]:
     path = Path(__file__).parent / "test_cases.json"
@@ -150,7 +155,8 @@ def plot_results(summary: list[dict], output_dir: Path):
 
     for ax, case in zip(axes, cases):
         case_data = [s for s in summary if s["test_case"] == case]
-        for temp in TEMPERATURES:
+        temps_in_data = sorted(set(s["temperature"] for s in case_data))
+        for temp in temps_in_data:
             points = [s for s in case_data if s["temperature"] == temp]
             points.sort(key=lambda s: s["max_retries"])
             x = [p["max_retries"] for p in points]
@@ -174,9 +180,11 @@ def plot_results(summary: list[dict], output_dir: Path):
 def main():
     parser = argparse.ArgumentParser(description="V2 实验框架")
     parser.add_argument("--small", action="store_true", help="小规模验证 (5 trials)")
+    parser.add_argument("--single", action="store_true", help="单次验证: 只跑1个用例×1组参数×1次，调试用")
     parser.add_argument("--resume", action="store_true", help="从中断结果恢复")
     parser.add_argument("--case", type=str, default=None, help="只跑指定 test_case")
     parser.add_argument("--output", type=str, default=None, help="输出目录")
+    parser.add_argument("--verbose", action="store_true", help="打印模型代码（调试用）")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
@@ -197,9 +205,25 @@ def main():
             print(f"未找到用例: {args.case}")
             sys.exit(1)
 
-    trials_per = TRIALS_SMALL if args.small else TRIALS_FULL
-    total = len(test_cases) * len(RETRIES_LEVELS) * len(TEMPERATURES) * trials_per
-    print(f"实验规模: {len(test_cases)} 用例 × {len(RETRIES_LEVELS)} retries × {len(TEMPERATURES)} temps × {trials_per} trials = {total} 次")
+    # 参数选择
+    if args.single:
+        test_cases = test_cases[:1]                      # 只取第一个用例
+        retries_levels = RETRIES_SINGLE
+        temps = TEMPS_SINGLE
+        trials_per = TRIALS_SINGLE
+    elif args.small:
+        test_cases = test_cases[:1]                      # 小规模也只取第一个用例
+        retries_levels = RETRIES_LEVELS
+        temps = TEMPERATURES
+        trials_per = TRIALS_SMALL
+    else:
+        retries_levels = RETRIES_LEVELS
+        temps = TEMPERATURES
+        trials_per = TRIALS_FULL
+
+    total = len(test_cases) * len(retries_levels) * len(temps) * trials_per
+    print(f"实验规模: {len(test_cases)} 用例 × {len(retries_levels)} retries × {len(temps)} temps × {trials_per} trials = {total} 次")
+    print(f"实验规模: {len(test_cases)} 用例 × {len(retries_levels)} retries × {len(temps)} temps × {trials_per} trials = {total} 次")
     print()
 
     # 输出目录
@@ -222,8 +246,8 @@ def main():
     # 批量运行
     count = len(results)
     for tc in test_cases:
-        for retries in RETRIES_LEVELS:
-            for temp in TEMPERATURES:
+        for retries in retries_levels:
+            for temp in temps:
                 for trial in range(1, trials_per + 1):
                     key = (tc["id"], retries, temp, trial)
                     if key in completed_keys:
@@ -232,7 +256,11 @@ def main():
                     print(f"[{count}/{total}] case={tc['id']} retries={retries} temp={temp} trial={trial} ...", end=" ", flush=True)
                     result = run_single_trial(graph, tc, temp, retries, trial)
                     results.append(result)
-                    status = "✅" if result["success"] else "❌"
+
+                    if args.verbose and not result["success"]:
+                        print(f"\n  错误: {result.get('errors', [])}")
+
+                    status = "OK" if result["success"] else "FAIL"
                     print(f"{status} ({result['duration']}s)")
 
                     # 每 10 次存一次
