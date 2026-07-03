@@ -1,0 +1,31 @@
+{
+  "test_cases": [
+    {
+      "id": "rc_lowpass",
+      "domain": "electrical",
+      "raw_input": "设计一个 RC 低通滤波器，截止频率 1kHz，电阻 1kΩ，电容根据截止频率计算，输入电压 5V 阶跃信号",
+      "expected": {
+        "component_type": "RC低通滤波器",
+        "parameters": { "R": 1000, "cutoff_freq": 1000 }
+      }
+    },
+    {
+      "id": "single_room_thermal",
+      "domain": "thermal",
+      "raw_input": "设计一个单房间热传导系统：室内热容 500kJ/K，墙体热阻 0.02 K/W，室外恒定温度 35°C，室内初始温度 25°C",
+      "expected": {
+        "component_type": "单房间热传导",
+        "parameters": { "heat_capacity": 500000, "thermal_resistance": 0.02 }
+      }
+    },
+    {
+      "id": "rc_lowpass_v2",
+      "domain": "electrical",
+      "raw_input": "做一个低通滤波器，用 RC 串联，要求-3dB 频率为 159Hz，电阻取 10kΩ",
+      "expected": {
+        "component_type": "RC低通滤波器",
+        "parameters": { "R": 10000, "cutoff_freq": 159 }
+      }
+    }
+  ]
+}

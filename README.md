@@ -14,6 +14,7 @@ LLM Agent 驱动的系统工程建模与物理仿真自反思闭环。
 |------|------|------|---------|
 | V1 | Week 2 | Sequential Python | 4 节点端到端跑通：需求→SysML→Modelica仿真→总结 |
 | V2 | Week 3 | LangGraph 状态图 | HITL 人机确认 + 打回机制 + 自修复子图(5次) + 实验框架 |
+| V3 | Week 4 | LangGraph + 质量自检 | 交叉校验 + 物理验证 + 修复日志 + 追溯链 + stopTime适配 |
 
 ## 仓库结构
 
@@ -27,9 +28,17 @@ LLM Agent 驱动的系统工程建模与物理仿真自反思闭环。
 │   ├── src/                #   LangGraph 状态图 + HITL + 子图
 │   ├── src_commented/      #   全量逐行中文注释版（学习用）
 │   ├── prompts/            #   参考官方库的 prompt 模板
-│   ├── experiments/        #   批量实验框架 (360次参数扫描)
+│   ├── experiments/        #   批量实验框架
 │   ├── V2-优缺点.md         #   设计决策记录
 │   └── 可用领域说明.txt     #   当前支持的物理域
+│
+├── week4/                  # V3: 质量自检版
+│   ├── src/                #   V2 架构 + 交叉校验 + 物理验证
+│   ├── src_commented/      #   全量逐行中文注释版（学习用）
+│   ├── prompts/            #   prompt 模板（+ 质量检查 prompt）
+│   ├── experiments/        #   实验框架（含 V3 质量指标）
+│   ├── V3-优缺点.md         #   设计决策记录
+│   └── README.md
 ```
 
 ## 快速开始
