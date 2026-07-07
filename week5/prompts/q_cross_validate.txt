@@ -1,0 +1,33 @@
+你是系统工程验证工程师。请对比"需求 JSON"和"SysML v2 代码"中的关键参数值，检查两者是否一致。
+
+## 需求 JSON
+{req_json}
+
+## SysML v2 代码
+{sysml_code}
+
+{prev_feedback}
+
+## 检查规则
+1. 从 SysML 代码中提取所有 `attribute redefines` 后面的数值
+2. 与需求 JSON 中 `parameters` 里的对应参数对比
+3. 参数名可能不同（需求写 R，SysML 写 resistance；需求写 C，SysML 写 capacitance），语义相同就算同一个参数
+4. 允许 5% 以内的舍入误差
+5. 只报真正的不一致，不要报假阳性
+
+## 返回 JSON
+{{
+  "passed": true或false,
+  "issues": [
+    {{
+      "param_name": "参数名",
+      "expected": "需求里的值",
+      "found": "SysML 里的值",
+      "severity": "error或warning",
+      "detail": "一句话描述"
+    }}
+  ],
+  "summary": "总体评价，如果不通过说明具体哪里不一致"
+}}
+
+只输出 JSON。如果没有发现问题，issues 为空数组、passed 为 true。

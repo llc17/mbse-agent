@@ -1,0 +1,103 @@
+{
+  "test_cases": [
+    {
+      "id": "rc_lowpass",
+      "domain": "electrical",
+      "raw_input": "设计一个 RC 低通滤波器，截止频率 1kHz，电阻 1kΩ，电容根据截止频率计算，输入电压 5V 阶跃信号",
+      "expected": {
+        "component_type": "RC低通滤波器",
+        "parameters": { "R": 1000, "cutoff_freq": 1000 }
+      },
+      "expected_physics": {
+        "validate_type": "rc_cutoff",
+        "expected_value_source": "params.cutoff_freq",
+        "tolerance_pct": 10.0,
+        "description": "截止频率 f_c = 1/(2πRC)"
+      }
+    },
+    {
+      "id": "rc_lowpass_v2",
+      "domain": "electrical",
+      "raw_input": "做一个低通滤波器，用 RC 串联，要求-3dB 频率为 159Hz，电阻取 10kΩ",
+      "expected": {
+        "component_type": "RC低通滤波器",
+        "parameters": { "R": 10000, "cutoff_freq": 159 }
+      },
+      "expected_physics": {
+        "validate_type": "rc_cutoff",
+        "expected_value_source": "params.cutoff_freq",
+        "tolerance_pct": 10.0,
+        "description": "截止频率 f_c = 1/(2πRC)"
+      }
+    },
+    {
+      "id": "single_room_thermal",
+      "domain": "thermal",
+      "raw_input": "设计一个单房间热传导系统：室内热容 500kJ/K，墙体热阻 0.02 K/W，室外恒定温度 35°C，室内初始温度 25°C",
+      "expected": {
+        "component_type": "单房间热传导",
+        "parameters": { "heat_capacity": 500000, "thermal_resistance": 0.02, "outdoor_temp": 308.15, "indoor_temp_initial": 298.15 }
+      },
+      "expected_physics": {
+        "validate_type": "thermal_steady",
+        "expected_value_source": "params.outdoor_temp",
+        "tolerance_pct": 20.0,
+        "description": "稳态温度应趋近室外温度 35°C (308.15K)"
+      }
+    },
+    {
+      "id": "rlc_lowpass",
+      "domain": "electrical",
+      "raw_input": "设计一个 RLC 串联低通滤波器，截止频率 10kHz，电阻 100Ω，电感 10mH，电容根据谐振频率计算，输入电压 5V 正弦波",
+      "expected": {
+        "component_type": "RLC低通滤波器",
+        "parameters": { "R": 100, "L": 0.01, "cutoff_freq": 10000 }
+      },
+      "expected_physics": {
+        "validate_type": "rlc_resonant_freq",
+        "expected_value_source": "params.cutoff_freq",
+        "tolerance_pct": 15.0,
+        "description": "谐振频率 f_0 = 1/(2π√(LC))，应接近截止频率 10kHz",
+        "extra_params": { "L": 0.01, "C_expected": 2.53e-8 }
+      }
+    },
+    {
+      "id": "dual_room_thermal",
+      "domain": "thermal",
+      "raw_input": "设计一个双房间热传导系统：房间A热容 300kJ/K，房间B热容 200kJ/K，两房间之间墙体热阻 0.05 K/W，房间A外墙热阻 0.03 K/W 连接到室外 35°C，房间B外墙热阻 0.04 K/W 连接到室外 35°C，两房间初始温度均为 20°C",
+      "expected": {
+        "component_type": "双房间热传导",
+        "parameters": {
+          "heat_capacity_A": 300000, "heat_capacity_B": 200000,
+          "thermal_resistance_AB": 0.05,
+          "thermal_resistance_A_outdoor": 0.03,
+          "thermal_resistance_B_outdoor": 0.04,
+          "outdoor_temp": 308.15,
+          "indoor_temp_initial": 293.15
+        }
+      },
+      "expected_physics": {
+        "validate_type": "thermal_steady",
+        "expected_value_source": "params.outdoor_temp",
+        "tolerance_pct": 20.0,
+        "description": "双房间最终都趋近室外温度 35°C (308.15K)，验证两个房间稳态温度"
+      }
+    },
+    {
+      "id": "opamp_inverting",
+      "domain": "electrical",
+      "raw_input": "设计一个基于理想运放的反相放大器，输入电阻 Rin=1kΩ，反馈电阻 Rf=10kΩ，输入电压 0.5V 直流，电源电压 ±15V，验证闭环增益为 -Rf/Rin = -10",
+      "expected": {
+        "component_type": "运放反相放大器",
+        "parameters": { "Rin": 1000, "Rf": 10000, "Vin": 0.5, "Vcc": 15.0, "Vee": -15.0 }
+      },
+      "expected_physics": {
+        "validate_type": "opamp_gain",
+        "expected_value_source": "computed",
+        "tolerance_pct": 15.0,
+        "description": "闭环增益 G = -Rf/Rin = -10，输出电压 Vout ≈ -5.0V",
+        "extra_params": { "expected_gain": -10.0, "expected_vout": -5.0 }
+      }
+    }
+  ]
+}

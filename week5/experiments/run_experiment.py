@@ -1,0 +1,364 @@
+"""
+V3 实验框架 — 批量参数扫描 + 成功率曲线 + 质量指标。
+
+用法:
+    python experiments/run_experiment.py                          # 全量: 4×3×30 = 360 次
+    python experiments/run_experiment.py --small                  # 小规模验证: 4×3×5 = 60 次
+    python experiments/run_experiment.py --resume                # 从中断恢复
+    python experiments/run_experiment.py --case rc_lowpass       # 只跑指定用例
+
+输出:
+    experiments/results/experiment_<时间戳>/
+    ├── results.json          # 全量原始数据（含 V3 质量指标）
+    ├── summary.json          # 汇总统计（含 cross/physics 通过率）
+    └── success_rate.png      # 成功率曲线图
+"""
+
+import sys
+from pathlib import Path
+
+# 把项目根目录加入搜索路径
+_project_dir = Path(__file__).resolve().parent.parent   # D:\mbse\week3
+if str(_project_dir) not in sys.path:
+    sys.path.insert(0, str(_project_dir))
+
+import argparse
+import json
+import logging
+import sys
+import time
+import uuid
+from datetime import datetime
+
+# Windows: force UTF-8 for emoji/Chinese output
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
+sys.path.insert(0, str(Path(__file__).parent.parent))
+
+from src.pipeline import build_pipeline, PipelineState
+from src.utils import check_prerequisites
+
+logger = logging.getLogger("experiment")
+
+# 实验参数矩阵
+RETRIES_LEVELS = [0, 1, 3, 5]
+TEMPERATURES = [0.1, 0.3, 0.7]
+TRIALS_FULL = 30
+TRIALS_SMALL = 5
+
+# 调试用 — 单次验证
+RETRIES_SINGLE = [3]
+TEMPS_SINGLE = [0.3]
+TRIALS_SINGLE = 1
+
+
+def load_test_cases() -> list[dict]:
+    path = Path(__file__).parent / "test_cases.json"
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)["test_cases"]
+
+
+def run_single_trial(
+    graph,
+    test_case: dict,
+    temperature: float,
+    max_retries: int,
+    trial_id: int,
+) -> dict:
+    """跑单次试验。返回结果字典。"""
+    thread_id = f"exp-{test_case['id']}-r{max_retries}-t{int(temperature*100)}-{trial_id}"
+    config = {"configurable": {"thread_id": thread_id}}
+
+    state: PipelineState = {
+        "raw_input": test_case["raw_input"],
+        "req": None, "sysml": None, "mo": None, "summary": None,
+        "node_status": {},
+        "human_feedback": "",
+        "reject_count_per_node": {},
+        "temperature": temperature,
+        "max_retries": max_retries,
+        "max_rejects": 3,
+        "dialogue_history": [],
+        "timing": {},
+        # V3 新增
+        "quality_checks": {},
+        "repair_log": [],
+        "physics_feedback": "",
+        # V4 新增: 物理验证配置（从 test_case 传入）
+        "expected_physics": test_case.get("expected_physics"),
+        "run_dir": str((Path("outputs") / f"exp_{thread_id}").resolve()),
+        "mode": "experiment",
+    }
+
+    t0 = time.time()
+    try:
+        final_state = graph.invoke(state, config)
+        duration = time.time() - t0
+        mo = final_state.get("mo", {})
+        # V3: 质量检查结果
+        quality_checks = final_state.get("quality_checks", {})
+        cross = quality_checks.get("cross_validate", {})
+        physics = quality_checks.get("physics_validate", {})
+        return {
+            "trial_id": trial_id,
+            "test_case": test_case["id"],
+            "temperature": temperature,
+            "max_retries": max_retries,
+            "success": mo.get("success", False),
+            "attempts": mo.get("attempts", 0),
+            "errors": mo.get("errors", []),
+            "duration": round(duration, 1),
+            "error": None,
+            # V3 质量指标
+            "cross_validate_passed": cross.get("passed", None),
+            "cross_validate_issues": len(cross.get("issues", [])),
+            "physics_validate_passed": physics.get("passed", None),
+            "physics_deviation_pct": physics.get("deviation_percent"),
+            "repair_count": len(final_state.get("repair_log", [])),
+        }
+    except Exception as e:
+        duration = time.time() - t0
+        logger.error("Trial %s 异常: %s", trial_id, str(e)[:200])
+        return {
+            "trial_id": trial_id,
+            "test_case": test_case["id"],
+            "temperature": temperature,
+            "max_retries": max_retries,
+            "success": False,
+            "attempts": 0,
+            "errors": [str(e)[:300]],
+            "duration": round(duration, 1),
+            "error": str(e)[:300],
+            # V3 质量指标（异常时无数据）
+            "cross_validate_passed": None,
+            "cross_validate_issues": 0,
+            "physics_validate_passed": None,
+            "physics_deviation_pct": None,
+            "repair_count": 0,
+        }
+
+
+def compute_summary(results: list[dict]) -> dict:
+    """汇总统计数据。V3: 增加质量指标。"""
+    groups = {}
+    for r in results:
+        key = (r["test_case"], r["max_retries"], r["temperature"])
+        if key not in groups:
+            groups[key] = {"total": 0, "success": 0, "attempts": [], "durations": [],
+                           "cross_ok": 0, "cross_total": 0,
+                           "physics_ok": 0, "physics_total": 0,
+                           "physics_deviations": [], "repair_counts": []}
+        g = groups[key]
+        g["total"] += 1
+        if r["success"]:
+            g["success"] += 1
+        g["attempts"].append(r["attempts"])
+        g["durations"].append(r["duration"])
+        # V3: 质量指标
+        if r.get("cross_validate_passed") is not None:
+            g["cross_total"] += 1
+            if r["cross_validate_passed"]:
+                g["cross_ok"] += 1
+        if r.get("physics_validate_passed") is not None:
+            g["physics_total"] += 1
+            if r["physics_validate_passed"]:
+                g["physics_ok"] += 1
+        if r.get("physics_deviation_pct") is not None:
+            g["physics_deviations"].append(r["physics_deviation_pct"])
+        if r.get("repair_count", 0) > 0:
+            g["repair_counts"].append(r["repair_count"])
+
+    summary = []
+    for (case, retries, temp), g in sorted(groups.items()):
+        entry = {
+            "test_case": case,
+            "max_retries": retries,
+            "temperature": temp,
+            "total": g["total"],
+            "success": g["success"],
+            "success_rate": round(g["success"] / g["total"], 3) if g["total"] else 0,
+            "avg_attempts": round(sum(g["attempts"]) / len(g["attempts"]), 1),
+            "avg_duration": round(sum(g["durations"]) / len(g["durations"]), 1),
+        }
+        # V3: 质量指标汇总
+        if g["cross_total"] > 0:
+            entry["cross_validate_rate"] = round(g["cross_ok"] / g["cross_total"], 3)
+        if g["physics_total"] > 0:
+            entry["physics_validate_rate"] = round(g["physics_ok"] / g["physics_total"], 3)
+        if g["physics_deviations"]:
+            entry["avg_physics_deviation"] = round(sum(g["physics_deviations"]) / len(g["physics_deviations"]), 1)
+        if g["repair_counts"]:
+            entry["avg_repairs"] = round(sum(g["repair_counts"]) / len(g["repair_counts"]), 1)
+        summary.append(entry)
+    return summary
+
+
+def plot_results(summary: list[dict], output_dir: Path):
+    """画成功率曲线。"""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    # 按 test_case 分组
+    cases = sorted(set(s["test_case"] for s in summary))
+
+    fig, axes = plt.subplots(1, len(cases), figsize=(6 * len(cases), 5), squeeze=False)
+    axes = axes[0]
+
+    for ax, case in zip(axes, cases):
+        case_data = [s for s in summary if s["test_case"] == case]
+        temps_in_data = sorted(set(s["temperature"] for s in case_data))
+        for temp in temps_in_data:
+            points = [s for s in case_data if s["temperature"] == temp]
+            points.sort(key=lambda s: s["max_retries"])
+            x = [p["max_retries"] for p in points]
+            y = [p["success_rate"] for p in points]
+            ax.plot(x, y, marker="o", label=f"T={temp}")
+
+        ax.set_xlabel("Max Self-Repair Retries")
+        ax.set_ylabel("Success Rate")
+        ax.set_title(f"Test Case: {case}")
+        ax.set_ylim(0, 1.05)
+        ax.grid(True, alpha=0.3)
+        ax.legend()
+
+    plt.tight_layout()
+    plot_path = output_dir / "success_rate.png"
+    plt.savefig(plot_path, dpi=150)
+    plt.close()
+    logger.info("成功率曲线已保存: %s", plot_path)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="V3 实验框架")
+    parser.add_argument("--small", action="store_true", help="小规模验证 (5 trials)")
+    parser.add_argument("--single", action="store_true", help="单次验证: 只跑1个用例×1组参数×1次，调试用")
+    parser.add_argument("--resume", action="store_true", help="从中断结果恢复")
+    parser.add_argument("--case", type=str, default=None, help="只跑指定 test_case")
+    parser.add_argument("--output", type=str, default=None, help="输出目录")
+    parser.add_argument("--verbose", action="store_true", help="打印模型代码（调试用）")
+    args = parser.parse_args()
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
+
+    # 环境检查
+    missing = check_prerequisites()
+    if missing:
+        print("\n❌ 环境检查失败:")
+        for m in missing:
+            print(f"  - {m}")
+        sys.exit(1)
+
+    # 加载用例
+    test_cases = load_test_cases()
+    if args.case:
+        test_cases = [tc for tc in test_cases if tc["id"] == args.case]
+        if not test_cases:
+            print(f"未找到用例: {args.case}")
+            sys.exit(1)
+
+    # 参数选择
+    if args.single:
+        test_cases = test_cases[:1]                      # 只取第一个用例
+        retries_levels = RETRIES_SINGLE
+        temps = TEMPS_SINGLE
+        trials_per = TRIALS_SINGLE
+    elif args.small:
+        test_cases = test_cases[:1]                      # 小规模也只取第一个用例
+        retries_levels = RETRIES_LEVELS
+        temps = TEMPERATURES
+        trials_per = TRIALS_SMALL
+    else:
+        retries_levels = RETRIES_LEVELS
+        temps = TEMPERATURES
+        trials_per = TRIALS_FULL
+
+    total = len(test_cases) * len(retries_levels) * len(temps) * trials_per
+    print(f"实验规模: {len(test_cases)} 用例 × {len(retries_levels)} retries × {len(temps)} temps × {trials_per} trials = {total} 次")
+    print(f"实验规模: {len(test_cases)} 用例 × {len(retries_levels)} retries × {len(temps)} temps × {trials_per} trials = {total} 次")
+    print()
+
+    # 输出目录
+    timestamp = datetime.now().strftime("%Y-%m-%d_%H%M%S")
+    output_dir = Path(args.output) if args.output else Path("experiments/results") / f"experiment_{timestamp}"
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # 恢复
+    results = []
+    results_path = output_dir / "results.json"
+    completed_keys = set()
+    if args.resume and results_path.exists():
+        results = json.loads(results_path.read_text())
+        completed_keys = {(r["test_case"], r["max_retries"], r["temperature"], r["trial_id"]) for r in results}
+        print(f"从中断恢复: 已完成 {len(results)} 次，剩余 {total - len(results)} 次\n")
+
+    # 构建图（单例复用）
+    graph = build_pipeline()
+
+    # 批量运行
+    count = len(results)
+    for tc in test_cases:
+        for retries in retries_levels:
+            for temp in temps:
+                for trial in range(1, trials_per + 1):
+                    key = (tc["id"], retries, temp, trial)
+                    if key in completed_keys:
+                        continue
+                    count += 1
+                    print(f"[{count}/{total}] case={tc['id']} retries={retries} temp={temp} trial={trial} ...", end=" ", flush=True)
+                    result = run_single_trial(graph, tc, temp, retries, trial)
+                    results.append(result)
+
+                    if args.verbose and not result["success"]:
+                        print(f"\n  错误: {result.get('errors', [])}")
+
+                    status = "OK" if result["success"] else "FAIL"
+                    print(f"{status} ({result['duration']}s)")
+
+                    # 每 10 次存一次
+                    if count % 10 == 0:
+                        results_path.write_text(json.dumps(results, ensure_ascii=False, indent=2))
+
+    # 最终保存
+    results_path.write_text(json.dumps(results, ensure_ascii=False, indent=2))
+
+    # 汇总
+    summary = compute_summary(results)
+    summary_path = output_dir / "summary.json"
+    summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2))
+
+    # V4: 保存 token 使用统计
+    try:
+        from src.llm_client import get_token_stats
+        token_stats = get_token_stats()
+        token_path = output_dir / "token_usage.json"
+        token_path.write_text(json.dumps(token_stats, ensure_ascii=False, indent=2))
+        total_tokens = token_stats.get("total_tokens", 0)
+        print(f"\nToken 消耗: {total_tokens:,} tokens ({token_stats.get('api_calls', 0)} 次 API 调用)")
+    except ImportError:
+        pass
+
+    # V3: 质量指标汇总
+    cross_ok = sum(1 for r in results if r.get("cross_validate_passed"))
+    cross_total = sum(1 for r in results if r.get("cross_validate_passed") is not None)
+    physics_ok = sum(1 for r in results if r.get("physics_validate_passed"))
+    physics_total = sum(1 for r in results if r.get("physics_validate_passed") is not None)
+
+    print(f"\n{'='*60}")
+    print("实验完成!")
+    print(f"  总次数: {len(results)}")
+    print(f"  成功率: {sum(1 for r in results if r['success'])}/{len(results)} = {sum(1 for r in results if r['success'])/len(results)*100:.1f}%")
+    if cross_total > 0:
+        print(f"  交叉校验通过率: {cross_ok}/{cross_total} = {cross_ok/cross_total*100:.1f}%")
+    if physics_total > 0:
+        print(f"  物理验证通过率: {physics_ok}/{physics_total} = {physics_ok/physics_total*100:.1f}%")
+    print(f"  结果: {results_path}")
+    print(f"  汇总: {summary_path}")
+
+    # 画图
+    plot_results(summary, output_dir)
+
+
+if __name__ == "__main__":
+    main()

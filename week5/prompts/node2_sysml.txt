@@ -1,0 +1,141 @@
+你是一个 SysML v2 建模专家。根据以下结构化需求，生成符合 OMG SysML v2 规范的文本代码。
+
+## SysML v2 语法规范（摘自 OMG SysML v2.0 官方 Training 示例）
+
+标准 import（必须用这个写法，禁止 import ISQ / import SI）：
+```
+private import ScalarValues::*;
+```
+
+标准 part def 写法（属性类型用 Real，不用 ISQ::xxx）：
+```
+part def Resistor {
+    doc /* Ideal linear electrical resistor */
+    attribute resistance : Real;
+    port p : ElectricalPort;
+    port n : ElectricalPort;
+}
+```
+
+标准 requirement def 写法：
+```
+requirement def LowPassFilterRequirement {
+    doc /* 滤波器应衰减截止频率以上的信号 */
+    attribute cutoffFrequency : Real;
+    require constraint { cutoffFrequency == 1.0 / (2.0 * pi * resistance * capacitance) }
+}
+```
+
+标准 connect 写法：
+```
+connect src.p to r.p;
+connect c.n to gnd.g;
+```
+
+## 参考示例 1：RC 低通滤波器（电气域）
+```
+package RCLowPassFilter {
+    private import ScalarValues::*;
+
+    port def ElectricalPort;
+
+    part def Resistor {
+        attribute resistance : Real;
+        port p : ElectricalPort;
+        port n : ElectricalPort;
+    }
+
+    part def Capacitor {
+        attribute capacitance : Real;
+        port p : ElectricalPort;
+        port n : ElectricalPort;
+    }
+
+    part def Ground {
+        port g : ElectricalPort;
+    }
+
+    part def VoltageSource {
+        attribute voltage : Real;
+        port p : ElectricalPort;
+        port n : ElectricalPort;
+    }
+
+    part r : Resistor {
+        attribute redefines resistance = {parameters_R};
+    }
+
+    part c : Capacitor {
+        attribute redefines capacitance = {parameters_C};
+    }
+
+    part gnd : Ground;
+    part src : VoltageSource {
+        attribute redefines voltage = 5.0;
+    }
+
+    connect src.p to r.p;
+    connect r.n to c.p;
+    connect c.n to gnd.g;
+    connect src.n to gnd.g;
+}
+```
+
+## 参考示例 2：单房间热传导（热域）
+```
+package SingleRoomThermal {
+    private import ScalarValues::*;
+
+    port def ThermalPort;
+
+    part def ThermalCapacitor {
+        attribute heatCapacity : Real;
+        port port_a : ThermalPort;
+    }
+
+    part def ThermalResistor {
+        attribute thermalResistance : Real;
+        port port_a : ThermalPort;
+        port port_b : ThermalPort;
+    }
+
+    part def FixedTemperature {
+        attribute temperature : Real;
+        port port_a : ThermalPort;
+    }
+
+    part room : ThermalCapacitor {
+        attribute redefines heatCapacity = 500000.0;
+    }
+
+    part wall : ThermalResistor {
+        attribute redefines thermalResistance = 0.02;
+    }
+
+    part outdoor : FixedTemperature {
+        attribute redefines temperature = 308.15;
+    }
+
+    connect outdoor.port_a to wall.port_a;
+    connect wall.port_b to room.port_a;
+}
+```
+
+## 要求
+- 组件类型：{component_type}
+- 参数：{parameters}
+- 拓扑：{topology}
+- 约束：{constraints}
+
+## 规则
+1. 使用 SysML v2 文本语法（package, part def, port, connect 等）
+2. import 必须写 `private import ScalarValues::*;`，禁止使用 ISQ::* 或 SI::*
+3. 属性类型统一用 `Real`（如 `attribute resistance : Real`），禁止用 `:> ISQ::xxx` 或 `:> ScalarValues::xxx`
+4. 包名和组件名用英文 PascalCase
+5. 所有数值带单位注释（Ω, F, Hz, K, W, H 等）
+6. 包含 doc 注释
+7. 包含 requirement def 定义需求
+8. 【V4追溯链】在 doc 注释中标注参数来源，例：doc /* R=1000 来源: 需求参数 resistance，值=1000Ω */
+
+{prev_error_section}
+只输出 SysML v2 代码。
