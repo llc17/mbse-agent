@@ -250,7 +250,7 @@ def main():
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     output_path = args.output or str(output_dir / f"probe_{args.case}_{timestamp}.json")
     with open(output_path, "w", encoding="utf-8") as f:
-        json.dump(summary, ensure_ascii=False, indent=2, default=str)
+        json.dump(summary, f, ensure_ascii=False, indent=2, default=str)
     print(f"\n详细结果: {output_path}")
 
     print_report(summary)
