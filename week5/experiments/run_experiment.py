@@ -238,7 +238,14 @@ def main():
     parser.add_argument("--case", type=str, default=None, help="只跑指定 test_case")
     parser.add_argument("--output", type=str, default=None, help="输出目录")
     parser.add_argument("--verbose", action="store_true", help="打印模型代码（调试用）")
+    parser.add_argument("--provider", type=str, default=None,
+                        help="LLM 提供商 (deepseek/zhipu)，默认从环境变量 LLM_PROVIDER 读取")
     args = parser.parse_args()
+
+    # V5: 切换 LLM 提供商（在构建图之前）
+    if args.provider:
+        from src.llm_client import set_provider
+        set_provider(args.provider)
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(message)s")
 
@@ -335,7 +342,9 @@ def main():
         token_path = output_dir / "token_usage.json"
         token_path.write_text(json.dumps(token_stats, ensure_ascii=False, indent=2))
         total_tokens = token_stats.get("total_tokens", 0)
-        print(f"\nToken 消耗: {total_tokens:,} tokens ({token_stats.get('api_calls', 0)} 次 API 调用)")
+        provider = token_stats.get("provider", "?")
+        model = token_stats.get("model", "?")
+        print(f"\nToken 消耗 ({provider}/{model}): {total_tokens:,} tokens ({token_stats.get('api_calls', 0)} 次 API 调用)")
     except ImportError:
         pass
 
