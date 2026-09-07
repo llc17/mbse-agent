@@ -1,0 +1,348 @@
+{
+  "schema_version": "v8-retrieval-corpus-1",
+  "corpus_id": "v8-stage3-development-knowledge-1",
+  "frozen_at": "2026-08-30T00:00:00Z",
+  "frozen": true,
+  "formal_experiment_authorized": false,
+  "holdout_content_included": false,
+  "exclusions": {
+    "holdout_content": true,
+    "experiment_results": true,
+    "manual_repair_answers": true
+  },
+  "fragments": [
+    {
+      "fragment_id": "parameter.rlc.source-amplitude.001",
+      "revision": 1,
+      "domain": "electrical",
+      "target_language": "structured_parameter",
+      "repair_layer": "requirement",
+      "knowledge_type": "parameter_alias",
+      "title": "RLC source amplitude alias",
+      "content": "For template rlc_filter, the structured parameter name source_amplitude denotes canonical input_voltage. Preserve the numeric value, explicit unit, and source text; do not infer a value or unit.",
+      "content_sha256": "2eb62c8fdf72dee3a64b4e9ba61786d826dd89c00fce516225ac6190c86fc90d",
+      "keywords": [
+        "rlc_filter",
+        "source_amplitude",
+        "input_voltage",
+        "amplitude",
+        "voltage"
+      ],
+      "retrieval_keys": {
+        "check_types": [
+          "requirement_normalization"
+        ],
+        "failure_categories": [
+          "parameter_normalization_failed"
+        ],
+        "diagnostic_subcategories": [
+          "unknown_parameter_alias"
+        ],
+        "symbols": [
+          "source_amplitude",
+          "input_voltage"
+        ],
+        "component_paths": []
+      },
+      "applicability": {
+        "allowed_scopes": [
+          "alias_resolution"
+        ],
+        "contraindications": [
+          "missing_unit",
+          "parameter_conflict"
+        ]
+      },
+      "source": {
+        "kind": "certified_template_contract",
+        "path": "src/modelica_templates.py",
+        "version": "v8-stage1",
+        "library": "Modelica Standard Library",
+        "library_version": "4.0.0",
+        "locator": "template_id=rlc_filter;parameter=input_voltage",
+        "source_sha256": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2"
+      },
+      "validation": {
+        "status": "behavior_verified",
+        "template_id": "rlc_filter",
+        "template_sha256": "db3eec7a00dc52e2135288e82491b943b8f5b03b1983d48bb31cc70739becdc6",
+        "check_types": [
+          "requirement_normalization",
+          "parameter_unit_consistency",
+          "modelica_compile",
+          "simulation",
+          "physical_behavior"
+        ],
+        "manifest_path": "configs/template_certifications.json"
+      },
+      "parameter_aliases": {
+        "source_amplitude": "input_voltage"
+      }
+    },
+    {
+      "fragment_id": "modelica.thermal.fixed-temperature.001",
+      "revision": 1,
+      "domain": "thermal",
+      "target_language": "modelica",
+      "repair_layer": "modelica",
+      "knowledge_type": "component_api",
+      "title": "Fixed-temperature boundary class",
+      "content": "In Modelica Standard Library 4.0.0, use Modelica.Thermal.HeatTransfer.Sources.FixedTemperature with parameter T and connector port. Project only this fully qualified class name when repairing an unknown thermal boundary class.",
+      "content_sha256": "0f2e292bbd2dbc48f2b98047a9b057631b47a85702da174d8c1a90328f77fb99",
+      "keywords": [
+        "FixedTemperature",
+        "thermal boundary",
+        "unknown class",
+        "Sources"
+      ],
+      "retrieval_keys": {
+        "check_types": [
+          "modelica_compile"
+        ],
+        "failure_categories": [
+          "modelica_build_failed"
+        ],
+        "diagnostic_subcategories": [
+          "unknown_class_or_library"
+        ],
+        "symbols": [
+          "FixedTemperature"
+        ],
+        "component_paths": [
+          "Modelica.Thermal.HeatTransfer.Sources.FixedTemperature"
+        ]
+      },
+      "applicability": {
+        "allowed_scopes": [
+          "component_class_path"
+        ],
+        "contraindications": [
+          "certified_template_slot_only_path"
+        ]
+      },
+      "source": {
+        "kind": "certified_template_contract",
+        "path": "src/modelica_templates.py",
+        "version": "v8-stage1",
+        "library": "Modelica Standard Library",
+        "library_version": "4.0.0",
+        "locator": "template_id=thermal_single_room;component=outdoor",
+        "source_sha256": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2"
+      },
+      "validation": {
+        "status": "certified",
+        "template_id": "thermal_single_room",
+        "template_sha256": "966b208d54de0f9b3a7690fd817b99315e45cf70114310ed8f98a85d5a4eae77",
+        "check_types": [
+          "modelica_compile",
+          "simulation",
+          "physical_behavior"
+        ],
+        "manifest_path": "configs/template_certifications.json"
+      }
+    },
+    {
+      "fragment_id": "modelica.electrical.sine-voltage-f.001",
+      "revision": 1,
+      "domain": "electrical",
+      "target_language": "modelica",
+      "repair_layer": "modelica",
+      "knowledge_type": "component_api",
+      "title": "Sine-voltage amplitude and frequency parameters",
+      "content": "In Modelica Standard Library 4.0.0, SineVoltage uses parameter V for amplitude and parameter f in Hz for frequency. Preserve the existing numeric expressions and project only the verified parameter names.",
+      "content_sha256": "92aeddd3ee55440a2b59f9eb8860fa36f00c1ff037df5e72e8abe22b76b29960",
+      "keywords": [
+        "SineVoltage",
+        "frequency",
+        "amplitude",
+        "parameter f",
+        "parameter V"
+      ],
+      "retrieval_keys": {
+        "check_types": [
+          "modelica_compile",
+          "physical_behavior"
+        ],
+        "failure_categories": [
+          "modelica_build_failed",
+          "physical_assertion_failed"
+        ],
+        "diagnostic_subcategories": [
+          "unknown_component_parameter",
+          "wrong_stimulus"
+        ],
+        "symbols": [
+          "SineVoltage",
+          "f",
+          "V"
+        ],
+        "component_paths": [
+          "Modelica.Electrical.Analog.Sources.SineVoltage"
+        ]
+      },
+      "applicability": {
+        "allowed_scopes": [
+          "component_parameter_name",
+          "stimulus_declaration"
+        ],
+        "contraindications": [
+          "certified_template_slot_only_path"
+        ]
+      },
+      "source": {
+        "kind": "certified_template_contract",
+        "path": "src/modelica_templates.py",
+        "version": "v8-stage1",
+        "library": "Modelica Standard Library",
+        "library_version": "4.0.0",
+        "locator": "template_id=rlc_filter;component=source",
+        "source_sha256": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2"
+      },
+      "validation": {
+        "status": "certified",
+        "template_id": "rlc_filter",
+        "template_sha256": "db3eec7a00dc52e2135288e82491b943b8f5b03b1983d48bb31cc70739becdc6",
+        "check_types": [
+          "modelica_compile",
+          "simulation",
+          "physical_behavior"
+        ],
+        "manifest_path": "configs/template_certifications.json"
+      }
+    },
+    {
+      "fragment_id": "modelica.electrical.analog-pins.001",
+      "revision": 1,
+      "domain": "electrical",
+      "target_language": "modelica",
+      "repair_layer": "modelica",
+      "knowledge_type": "connector_api",
+      "title": "Electrical analog pin names",
+      "content": "Modelica electrical analog one-port components connect through pins p and n. A series path connects source.p to each component p, each upstream n to the next p, and source.n to Ground.p.",
+      "content_sha256": "962a7754cb6cef32d1cce9fe1a60e669214439f4342a11cedc32f3839126fa6c",
+      "keywords": [
+        "electrical analog",
+        "connector",
+        "pin p",
+        "pin n",
+        "Ground.p"
+      ],
+      "retrieval_keys": {
+        "check_types": [
+          "modelica_compile"
+        ],
+        "failure_categories": [
+          "modelica_build_failed"
+        ],
+        "diagnostic_subcategories": [
+          "unknown_port_or_member",
+          "connector_type_mismatch"
+        ],
+        "symbols": [
+          "p",
+          "n",
+          "Ground.p"
+        ],
+        "component_paths": [
+          "Modelica.Electrical.Analog"
+        ]
+      },
+      "applicability": {
+        "allowed_scopes": [
+          "connector_member",
+          "connect_equation"
+        ],
+        "contraindications": [
+          "certified_template_slot_only_path"
+        ]
+      },
+      "source": {
+        "kind": "certified_template_contract",
+        "path": "src/modelica_templates.py",
+        "version": "v8-stage1",
+        "library": "Modelica Standard Library",
+        "library_version": "4.0.0",
+        "locator": "template_id=rlc_filter;equation=series_connections",
+        "source_sha256": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2"
+      },
+      "validation": {
+        "status": "certified",
+        "template_id": "rlc_filter",
+        "template_sha256": "db3eec7a00dc52e2135288e82491b943b8f5b03b1983d48bb31cc70739becdc6",
+        "check_types": [
+          "modelica_compile",
+          "simulation",
+          "physical_behavior"
+        ],
+        "manifest_path": "configs/template_certifications.json"
+      }
+    },
+    {
+      "fragment_id": "modelica.thermal.heat-ports.001",
+      "revision": 1,
+      "domain": "thermal",
+      "target_language": "modelica",
+      "repair_layer": "modelica",
+      "knowledge_type": "connector_api",
+      "title": "Thermal heat-port member names",
+      "content": "FixedTemperature exposes connector port. ThermalResistor exposes port_a and port_b, while HeatCapacitor exposes port. Use only these verified connector members for a local connector repair.",
+      "content_sha256": "1e62ff974896ec6e616789cb420a472232143b386e9ff140335366b62e001bea",
+      "keywords": [
+        "FixedTemperature.port",
+        "ThermalResistor.port_a",
+        "ThermalResistor.port_b",
+        "HeatCapacitor.port",
+        "connector"
+      ],
+      "retrieval_keys": {
+        "check_types": [
+          "modelica_compile"
+        ],
+        "failure_categories": [
+          "modelica_build_failed"
+        ],
+        "diagnostic_subcategories": [
+          "unknown_port_or_member",
+          "connector_type_mismatch"
+        ],
+        "symbols": [
+          "port",
+          "port_a",
+          "port_b"
+        ],
+        "component_paths": [
+          "Modelica.Thermal.HeatTransfer"
+        ]
+      },
+      "applicability": {
+        "allowed_scopes": [
+          "connector_member",
+          "connect_equation"
+        ],
+        "contraindications": [
+          "certified_template_slot_only_path"
+        ]
+      },
+      "source": {
+        "kind": "certified_template_contract",
+        "path": "src/modelica_templates.py",
+        "version": "v8-stage1",
+        "library": "Modelica Standard Library",
+        "library_version": "4.0.0",
+        "locator": "template_id=thermal_single_room;equation=thermal_connections",
+        "source_sha256": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2"
+      },
+      "validation": {
+        "status": "certified",
+        "template_id": "thermal_single_room",
+        "template_sha256": "966b208d54de0f9b3a7690fd817b99315e45cf70114310ed8f98a85d5a4eae77",
+        "check_types": [
+          "modelica_compile",
+          "simulation",
+          "physical_behavior"
+        ],
+        "manifest_path": "configs/template_certifications.json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+__pycache__/
+*.py[cod]
+results/
+
+# Local V8 reports and formal/private evidence
+V8总结.md
+V8结项报告.md
+V8失败复盘与V9启动建议.md
+理解及问题.md
+configs/formal_authorization_*.json
+configs/formal_authorization_*.sha256
+configs/independent_holdout_binding_v1.json
+configs/independent_holdout_binding_v1.sha256
+configs/v8_closure_record_v1.json
+configs/v8_closure_record_v1.sha256
+configs/template_certifications.json
+configs/source_snapshots/
+experiments/quality_gate_practice.py
+experiments/validate_v8_closure.py
+tests/test_v8_closure.py

@@ -1,0 +1,81 @@
+{
+  "schema_version": "8.1-stage0-natural-language-stage4",
+  "run_id": "",
+  "version": "",
+  "case_id": "",
+  "git_commit": "",
+  "git_worktree_status_sha256": "",
+  "prompt_sha256": "",
+  "case_sha256": "",
+  "corpus_sha256": "",
+  "generator": {
+    "provider": "",
+    "model": "",
+    "parameters": {},
+    "generation_schema_version": "",
+    "requirement_sha256": "",
+    "grammar_sha256": "",
+    "generation_evidence_sha256": "",
+    "traceability_input_sha256": "",
+    "natural_language_interpretation_performed": false,
+    "online_api_used": false,
+    "prompt_tokens": 0,
+    "completion_tokens": 0,
+    "total_tokens": 0,
+    "duration_s": 0.0
+  },
+  "judge": {
+    "provider": "Kimi",
+    "model": "",
+    "prompt_sha256": "",
+    "parameters": {}
+  },
+  "tool_versions": {
+    "python": "",
+    "openmodelica": "",
+    "sysmlpy": ""
+  },
+  "budgets": {
+    "token": null,
+    "wall_time_s": null,
+    "generation_calls": null,
+    "content_repairs": null,
+    "infrastructure_retries": null
+  },
+  "retrieval_fragment_ids": [],
+  "adaptive_routing": {
+    "execution_contract": "",
+    "input_kind": "",
+    "input_snapshot_sha256": "",
+    "path": "",
+    "initial_artifact_bundle_sha256": "",
+    "initial_validation_sha256": "",
+    "first_event_sha256": "",
+    "last_event_sha256": ""
+  },
+  "budget_ledger": {
+    "last_event_sha256": "",
+    "simple_case_token_budget": null,
+    "simple_case_duration_budget_s": null,
+    "token_budget_status": "not_frozen",
+    "duration_budget_status": "not_frozen"
+  },
+  "traceability": {
+    "trace_input_sha256": "",
+    "report_sha256": "",
+    "requirement_artifact_sha256": "",
+    "sysml_artifact_sha256": "",
+    "modelica_artifact_sha256": "",
+    "integrity_passed": false
+  },
+  "execution_boundaries": {
+    "online_api_used": false,
+    "external_network_used": false,
+    "holdout_accessed": false,
+    "cross_version_comparison_performed": false
+  },
+  "timestamps": {
+    "started_at": "",
+    "finished_at": ""
+  }
+}

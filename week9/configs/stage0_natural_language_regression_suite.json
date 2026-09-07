@@ -1,0 +1,42 @@
+{
+  "schema_version": "v8-stage0-natural-language-regression-suite-1",
+  "scope": "development_regression_only",
+  "offline_guard": {
+    "external_network_allowed": false,
+    "online_model_allowed": false,
+    "holdout_access_allowed": false,
+    "allowed_generation_provider": "v8_deterministic_local_grammar"
+  },
+  "cases": [
+    {
+      "case_id": "rc_lowpass",
+      "case_sha256": "da47f62d9087dbb8caf98339f56823078a849e070122f7e342450692595b9571",
+      "expected_template_id": "rc_filter"
+    },
+    {
+      "case_id": "rlc_lowpass",
+      "case_sha256": "c997be95d0a91394a4d6f5cce7ee094ad1f02090c4f221152e26cc4c044cf7fc",
+      "expected_template_id": "rlc_filter"
+    },
+    {
+      "case_id": "dual_room_thermal",
+      "case_sha256": "81e7d018cb714bce3e60bdb10c5346339ee0c03cd87b94a15b0e8e7e7ada79a0",
+      "expected_template_id": "thermal_dual_room"
+    }
+  ],
+  "exact_expectations": {
+    "overall_success": true,
+    "execution_contract": "certified_template_adaptive_v1",
+    "input_kind": "raw_natural_language",
+    "path": "fast_path",
+    "final_state": "succeeded",
+    "natural_language_interpretation_performed": true,
+    "online_api_used": false,
+    "generation_count": 1,
+    "model_tokens": 0,
+    "retrieval_triggered": false,
+    "trace_integrity": true,
+    "token_budget_status": "not_frozen",
+    "duration_budget_status": "not_frozen"
+  }
+}

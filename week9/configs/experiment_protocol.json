@@ -1,0 +1,232 @@
+{
+  "protocol_version": "v8-stage0-2026-08-28",
+  "status": "replacement_formal_aborted_22_of_100_holdout_timeout_no_post_holdout_tuning",
+  "frozen_before_v8_formal_results": true,
+  "formal_online_runs_allowed": false,
+  "comparison_versions": [
+    "v4",
+    "v6",
+    "v8"
+  ],
+  "development_provenance": {
+    "assistant_family": "GPT/Codex",
+    "experimental_runtime_role": false,
+    "note": "Development assistance is provenance metadata, not a comparison arm or runtime generator."
+  },
+  "comparison_arms": [
+    {
+      "arm_id": "v4_default_deepseek",
+      "version": "v4",
+      "configuration_view": "controlled_and_default",
+      "generation_mode": "deepseek",
+      "online_generation": true
+    },
+    {
+      "arm_id": "v6_default_deepseek",
+      "version": "v6",
+      "configuration_view": "controlled_and_default",
+      "generation_mode": "deepseek",
+      "online_generation": true
+    },
+    {
+      "arm_id": "v8_controlled_deepseek",
+      "version": "v8",
+      "configuration_view": "controlled",
+      "generation_mode": "deepseek",
+      "online_generation": true
+    },
+    {
+      "arm_id": "v8_default_local",
+      "version": "v8",
+      "configuration_view": "default",
+      "generation_mode": "deterministic_local",
+      "online_generation": false
+    }
+  ],
+  "controlled_comparison_arms": [
+    "v4_default_deepseek",
+    "v6_default_deepseek",
+    "v8_controlled_deepseek"
+  ],
+  "default_configuration_arms": [
+    "v4_default_deepseek",
+    "v6_default_deepseek",
+    "v8_default_local"
+  ],
+  "baselines": {
+    "cost_reference": "v4",
+    "quality_reference": "v6"
+  },
+  "datasets": {
+    "development_regression": {
+      "case_hashes": {
+        "rc_lowpass": "da47f62d9087dbb8caf98339f56823078a849e070122f7e342450692595b9571",
+        "dual_room_thermal": "81e7d018cb714bce3e60bdb10c5346339ee0c03cd87b94a15b0e8e7e7ada79a0",
+        "rlc_lowpass": "c997be95d0a91394a4d6f5cce7ee094ad1f02090c4f221152e26cc4c044cf7fc"
+      },
+      "dataset_sha256": "fe5a5f6e4c4239559eb6fbb943aaec9506f677f7a4ce33dbcde08b82b39c6b2e"
+    },
+    "holdout": {
+      "case_hashes": {
+        "rc_lowpass_parameter_variant": "7ec80f3e0b4149559ff44f281fd82ffb9a4d7314e46350ceb805ec04c26c9fa7",
+        "three_room_thermal_chain": "0bd46a4fe6da997d071fed696b0d80c1c662e3045faaa1bb05dcb983234d1307"
+      },
+      "dataset_sha256": "e85b06bc2ad6b4ee0ce9156a74f4918816de158e70b192308ad7aef6da90dd6c"
+    },
+    "error_injection": {
+      "case_hashes": {
+        "missing_sysml": "a448d18c0e3d5b32f5849ec298c00080ad01b1d030c6ef0e3a47818c473c59fa",
+        "missing_modelica": "0e3ccf52abf1d4727c2064fcab8e661f5cdfbc9dccaaa5ecfe023c6d945f3fed",
+        "missing_csv": "58a07882455b2493f74a8e834a92d6ccca505037c7df9da2f277bfadc2688846",
+        "modelica_syntax_error": "75c68251d8ee3513cdb74ca67747d9a719ff07927eb2ac8accbf3c0cc73b9782",
+        "wrong_component_path": "44d659538283a1d25d950768bb1c191a238aa0b6b83866693dbdf6ebe4619117",
+        "port_mismatch": "4fcf15a262f2175c69c82777a7d4e025b3359e0b721f2b1321131c29f8f4f746",
+        "validator_exception": "62f231ec9834daffc16c5c8d6e2f667c6730a3b1c20ca8bfb9bc3a360830d2c5",
+        "file_lock": "3bc3e96ad04f80dcff907418b5bb3bcc03cf691cca3c8656d6aae509b7ed401b"
+      },
+      "dataset_sha256": "703fad03e3ef48f7ba77ba2ee47a600ddf531610eb354c0420c23ec3cf3d8cdf"
+    }
+  },
+  "source_hashes": {
+    "v8_start_prompt": "8d5172d001091384981a0c9c52af6169cb9f1848a5a0ac61115945d0b75fda02",
+    "v8_task_plan": "965617be275951c429c27ed6e81a862eda7dc5a7a3395b75586d6662370866e5",
+    "v7_summary": "851004de5abd8308dff453fa5d33fa258d541654c7f1d0b11f2e844f1bb9fd28"
+  },
+  "source_snapshot_policy": {
+    "v7_summary_source_path": "week8/V7总结.md",
+    "v7_summary_frozen_path": "week9/configs/source_snapshots/V7总结-pre-pilot-20260831T081903Z.md",
+    "captured_before_complete_pilot": true,
+    "reason": "The historical source document was being edited externally during the first incomplete paid pilot attempt; the exact current bytes were copied so a single experiment batch cannot change its own source baseline."
+  },
+  "release_thresholds": {
+    "known_hard_error_false_release_rate_max": 0.0,
+    "development_success_improvement_min": 0.1111111111111111,
+    "holdout_noninferiority_margin": 0.0,
+    "simple_case_token_budget": 33198,
+    "simple_case_duration_budget_s": 75.1,
+    "max_content_repairs": 1,
+    "freeze_note": "Frozen from the verified contemporaneous V4/V6 Pilot proposal before any formal V8 result or holdout execution."
+  },
+  "release_threshold_freeze": {
+    "proposal_path": "week9/results/release-threshold-proposal-20260831T091033Z/release-threshold-proposal.json",
+    "proposal_sha256": "cae1f6084dbcbda42936cee973f2bc81aa31c8d6cff04a62c10fc93b79e80fb5",
+    "pilot_report_path": "week9/results/contemporaneous-pilot-20260831T082240Z/contemporaneous-pilot-report.json",
+    "pilot_report_sha256": "1a02e9b0d14b8f00b0871507024d6825ca01f486ea55f280b3c97b99eca32b3a",
+    "judge_stability_report_path": "week9/results/judge-stability-20260831T090435Z/judge-stability-report.json",
+    "judge_stability_report_sha256": "d238f16737fed6e23ba7f8d222b5659f75b0afed6facfca1da6af6f5772547a5",
+    "frozen_before_formal_v8_results": true,
+    "holdout_accessed": false
+  },
+  "repetitions": {
+    "smoke_or_exploratory_min": 3,
+    "formal_recommended": 5,
+    "three_repeat_conclusion_label": "preliminary"
+  },
+  "fairness": {
+    "same_raw_requirement": true,
+    "same_generator_model_and_parameters": true,
+    "interleaved_paired_execution": true,
+    "isolated_subprocess_per_version": true,
+    "unique_run_directory": true,
+    "external_evaluator_is_source_of_truth": true,
+    "infrastructure_failures_reported_separately": true,
+    "equal_budget_and_default_configuration_views": true
+  },
+  "generator": {
+    "provider": "deepseek",
+    "api_key_env_var": "DEEPSEEK_API_KEY",
+    "api_base_env_var": "DEEPSEEK_API_BASE",
+    "model_env_var": "DEEPSEEK_MODEL",
+    "temperature": 0.3,
+    "max_tokens": 8192,
+    "v8_projection_schema": "v8-certified-requirement-projection-1",
+    "v8_prompt_sha256": "b6b4abed2e928d23f7aa54988f205097f0c270231d1cff2c04a51a3b2be91695",
+    "v8_deterministic_verifier_required": true
+  },
+  "formal_execution_implementation": {
+    "ready": true,
+    "offline_mock_and_integration_tested": true,
+    "files": {
+      "src/generation.py": "3e1b3c242a417699fdefc4277fe04c1885c9625f4fa501031dd6bec9187c359d",
+      "src/online_generation.py": "ce689879b03ccff9672ffd30fd8a85f996b03d2f9c118342dff2be8442e0a4f5",
+      "src/runner.py": "608f09bb497c5ab40d0f3cf195e20dd5064b508ff6bdfbcf72223d631283c712",
+      "src/pipeline.py": "f5e141410bb65ded2a760d3c11a5674225ca56b9d1004c09cbc631e21ef9b6aa",
+      "experiments/run_formal_comparison.py": "96ce1f50af823e18fc40f991bf605a75c58048d4a1c54f9b81a29f733264ca64",
+      "experiments/run_formal_judge.py": "f02cd2397bdb3de24c018cd7c463bf2b271f84ce74d1aba2567e36b67b6331fb",
+      "experiments/version_adapters.py": "be05198bfaab708473af2dd9db686a6885626af39a5be7ade47001ab23f1c6c7",
+      "experiments/cross_version_validation.py": "a0472a3c5951818df899ffc837de70050409499c7e5e2ce98836dae265b79cb2",
+      "experiments/external_evaluator.py": "dab0873c394464669abe24b5cab0c5a29c51b900eecf8b378aff908bacd7bd88",
+      "experiments/online_policy.py": "13231e36d65ad31398eae3f525f551099fde2d43abece8cecb197eea2bfbb6eb",
+      "experiments/subprocess_control.py": "cd152dcb9985e5eab8b72a74f1ef4c3557e6882f6667ea873fb8e7261e2cd805"
+    }
+  },
+  "formal_restart_preflight": {
+    "report_path": "week9/results/formal-local-preflight-20260831T145342Z/formal-local-preflight-report.json",
+    "report_sha256": "1e9244b57acdd107f98f760be152c40040f140e0daa672fc061cce457c388ae0",
+    "aborted_attempt_marker_path": "week9/results/formal-comparison-20260831T141602Z/INCOMPLETE.md",
+    "aborted_attempt_marker_sha256": "74cba5ae4b3e0fbb1c65fc65ef84daf2393ba4bd36d079f24db325e408d65228",
+    "aborted_completed_run_count": 9,
+    "aborted_paid_deepseek_call_count": 7,
+    "aborted_holdout_accessed": false,
+    "reuse_aborted_runs": false,
+    "replacement_planned_run_count": 100
+  },
+  "latest_formal_attempt": {
+    "attempt_directory": "week9/results/formal-comparison-20260831T150136Z",
+    "incomplete_marker_path": "week9/results/formal-comparison-20260831T150136Z/INCOMPLETE.md",
+    "incomplete_marker_sha256": "bdb3ced84a4713b0d0c5b26ec8cd22c38929cbff115f58f25c0ab801ee0be788",
+    "timeout_result_path": "week9/results/formal-comparison-20260831T150136Z/runs/018-holdout-r01-three_room_thermal_chain-v6_default_deepseek.run-result.json",
+    "timeout_result_sha256": "c9a9fe137dbdf2b70f18a727a4bc62a9f29b1d37ecfa067254ec42b303b68ea7",
+    "completed_run_count": 22,
+    "paid_deepseek_call_count": 16,
+    "deterministic_local_run_count": 6,
+    "development_run_count": 14,
+    "holdout_run_count": 8,
+    "holdout_accessed": true,
+    "formal_report_produced": false,
+    "formal_judge_called": false,
+    "infrastructure_failure_count_min": 1,
+    "process_tree_cleanup_succeeded": true,
+    "post_holdout_tuning_allowed": false
+  },
+  "holdout_policy": {
+    "excluded_from_template_development": true,
+    "excluded_from_rag_corpus": true,
+    "contains_reference_code": false,
+    "formal_access_only_after_code_and_config_freeze": true,
+    "access_enabled": false
+  },
+  "retrieval": {
+    "default_enabled": false,
+    "formal_corpus_sha256": null,
+    "top_k": null,
+    "max_fragment_tokens": null,
+    "max_total_retrieval_tokens": null,
+    "ablation_from_same_failure_snapshot": true,
+    "enable_by_default_only_after_hard_metric_gain": true
+  },
+  "judge": {
+    "provider": "Kimi",
+    "model_env_var": "KIMI_MODEL",
+    "api_base_env_var": "KIMI_API_BASE",
+    "api_key_env_var": "KIMI_API_KEY",
+    "temperature_parameter_sent": false,
+    "max_tokens_min": 16000,
+    "representative_artifacts_min": 3,
+    "repeats_per_artifact_min": 3,
+    "content_hash_deduplication": true,
+    "hard_gate": false
+  },
+  "online_execution_policy": {
+    "batch_calls_require_user_confirmation": true,
+    "current_milestone_allows_online_calls": false,
+    "authorization_scope": "aborted_clean_replacement_22_of_100_16_deepseek_6_local_holdout_accessed_no_further_paid_calls",
+    "user_confirmation_id": "user-approved-recommended-clean-restart-20260831T145734Z",
+    "process_tree_cleanup_ready": true,
+    "process_tree_cleanup_certification": {
+      "report_path": "week9/results/subprocess-cleanup-certification-20260831T023937Z/subprocess-cleanup-certification.json",
+      "sha256": "579537c875cda2027d26798e372b4710aa9a9bab6a3caf43c8acad0b7d61cf32"
+    },
+    "note": "The clean replacement was stopped after 22 of 100 runs because the V6 three-room holdout adapter timed out at the frozen 900-second limit. Sixteen DeepSeek calls and six local runs completed, including eight holdout runs. Process-tree cleanup succeeded. Online execution and holdout access are disabled; implementation, timeout, thresholds, and judging rules must not be tuned after this holdout access."
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "checked_on": "2026-08-28",
+  "project_root": "D:\\mbse",
+  "git": {
+    "commit": "3d78cd4c80d976606f326a8140727417a91782cc",
+    "worktree_clean": false,
+    "note": "Existing unrelated untracked files were preserved."
+  },
+  "python": {
+    "version": "3.13.3",
+    "pytest_available": false,
+    "test_runner_selected": "unittest"
+  },
+  "packages": {
+    "pydantic": "2.12.3",
+    "sysmlpy": "0.34.1",
+    "OMPython_available": true,
+    "langgraph_available": true,
+    "python_dotenv_available": true
+  },
+  "openmodelica": {
+    "on_path": false,
+    "resolved_executable": "D:\\openmodelica\\bin\\omc.exe",
+    "version": "OpenModelica v1.25.7 (64-bit)"
+  },
+  "dotenv_key_presence": {
+    "DEEPSEEK_API_KEY": true,
+    "DEEPSEEK_API_BASE": false,
+    "DEEPSEEK_MODEL": true,
+    "KIMI_API_KEY": true,
+    "KIMI_API_BASE": true,
+    "KIMI_MODEL": true
+  },
+  "secrets_read_or_recorded": false,
+  "limitations": [
+    "OpenModelica is installed but omc is not currently on PATH.",
+    "pytest is unavailable in the active interpreter; no dependency installation was performed.",
+    "DEEPSEEK_API_BASE is not declared in the root .env and may rely on a code default."
+  ]
+}
+

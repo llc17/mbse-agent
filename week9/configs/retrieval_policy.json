@@ -1,0 +1,24 @@
+{
+  "schema_version": "v8-retrieval-policy-1",
+  "enabled": false,
+  "retriever_version": "v8-filtered-lexical-1",
+  "token_estimator": "unicode-regex-estimator-1",
+  "top_k": 3,
+  "max_fragment_tokens": 160,
+  "max_total_retrieval_tokens": 480,
+  "max_retrieval_events_per_run": 1,
+  "allowed_trigger_reasons": [
+    "explicit_knowledge_gap",
+    "local_repair_failed"
+  ],
+  "allowed_diagnostic_subcategories": [
+    "unknown_parameter_alias",
+    "unknown_class_or_library",
+    "unknown_component_parameter",
+    "unknown_port_or_member",
+    "connector_type_mismatch",
+    "wrong_stimulus"
+  ],
+  "corpus_sha256": "f931c1a06d42e592a2521b226f3de0a14c606053660131a85b566e62a9733ff0",
+  "formal_experiment_authorized": false
+}
