@@ -1,0 +1,20 @@
+{
+  "schema_version": "v9-path-rag-public-development-1",
+  "public_data_only": true,
+  "independent_holdout": false,
+  "purpose": "新问题上的有限功能验收；不与旧题分数作因果比较，不作为纯检索算法对照",
+  "questions": [
+    {"id":"n1","question":"双房间模型的室外温度参数在 SysML 和 Modelica 中分别怎样声明？","run_ids":["trace_dual"],"expected_status":"ready","intent":"declarations","target":"parameter:outdoor_temperature","required_layers":["sysml","modelica"],"expected_facts":["outdoor_temperature","两层声明均约为 308.15 K，保留各自精确声明"],"required_path_count":2},
+    {"id":"n2","question":"请列出房间B热容对应的需求和两个模型中的精确声明。","run_ids":["trace_dual"],"expected_status":"ready","intent":"declarations","target":"parameter:heat_capacity_b","required_layers":["sysml","modelica"],"expected_facts":["REQ-NL-002","heat_capacity_b","SysML 200000.0；Modelica 200000"],"required_path_count":2},
+    {"id":"n3","question":"截止频率参数对应哪条需求？请附上 SysML 与 Modelica 的声明。","run_ids":["trace_rc_before"],"expected_status":"ready","intent":"declarations","target":"parameter:cutoff_frequency","required_layers":["sysml","modelica"],"expected_facts":["REQ-NL-003","cutoff_frequency","两层数值为 1000"],"required_path_count":2},
+    {"id":"n4","question":"capacitance 在两个模型中的精确声明是什么，它关联哪条需求？","run_ids":["trace_rc_before"],"expected_status":"ready","intent":"declarations","target":"parameter:capacitance","required_layers":["sysml","modelica"],"expected_facts":["REQ-NL-002","capacitance","1.5915494309189535e-07"],"required_path_count":2},
+    {"id":"n5","question":"房间B外墙热阻直接关联了哪些模型声明和检查？只查显式影响关联。","run_ids":["trace_dual"],"expected_status":"ready","intent":"impact","target":"parameter:outdoor_resistance_b","required_layers":["sysml","modelica"],"required_checks":["requirement_normalization","parameter_unit_consistency","cross_model_consistency","certified_template_integrity","modelica_compile"],"expected_facts":["outdoor_resistance_b","两个模型声明","完整五项显式关联检查；不声称全部必须重跑或数值影响保证"],"required_path_count":7},
+    {"id":"n6","question":"从双房间模型的 sysml_syntax 检查，沿显式追溯路径可以找到哪些需求与目标？","run_ids":["trace_dual"],"expected_status":"ready","intent":"reverse","check_type":"sysml_syntax","required_requirements":["REQ-NL-009"],"expected_facts":["REQ-NL-009 → constraint:topology → sysml_syntax","明确是多跳结构关联"],"required_path_count":1},
+    {"id":"n7","question":"从 cross_model_consistency 检查反查 RC 的需求，列出完整的需求—目标—检查路径。","run_ids":["trace_rc_before"],"expected_status":"ready","intent":"reverse","check_type":"cross_model_consistency","required_requirements":["REQ-NL-001","REQ-NL-002","REQ-NL-003","REQ-NL-004","REQ-NL-005"],"expected_facts":["resistance、capacitance、cutoff_frequency、input_voltage、constraint:topology 五条对应需求路径","结构关联不等于故障原因"],"required_path_count":5},
+    {"id":"n8","question":"比较这两个版本的电阻：前后数值有没有变化？分别列出 SysML 和 Modelica 声明。","run_ids":["trace_rc_before","trace_rc_after"],"expected_status":"ready","intent":"compare","target":"parameter:resistance","required_layers":["sysml","modelica"],"expected_facts":["前后均为 1000 Ohm，未变化","前后各自两层声明，运行归属正确"],"required_path_count":4},
+    {"id":"n9","question":"wind_speed 在 SysML 和 Modelica 中的参数声明是什么？","run_ids":["trace_dual"],"expected_status":"abstained","expected_reason_class":"unknown_target","expected_facts":["无 wind_speed 目标证据；不能替换为温度或热阻"],"expected_api_calls":0},
+    {"id":"n10","question":"初始温度参数的模型声明是什么？","run_ids":["trace_dual"],"expected_status":"abstained","expected_reason_class":"ambiguous_target","expected_facts":["房间A/B初始温度目标未消歧，提示明确目标"],"expected_api_calls":0},
+    {"id":"n11","question":"室外温度参数在两个模型中怎样声明？","run_ids":["trace_rc_before"],"expected_status":"abstained","expected_reason_class":"target_absent","expected_facts":["当前RC运行无室外温度目标，不可越到双房间运行取证"],"expected_api_calls":0},
+    {"id":"n12","question":"输入电压参数通过检查，能证明产品已经取得量产认证吗？","run_ids":["trace_rc_before"],"expected_status":"abstained","expected_reason_class":"unsupported_question","expected_facts":["不能用参数或检查记录证明产品量产认证"],"expected_api_calls":0}
+  ]
+}

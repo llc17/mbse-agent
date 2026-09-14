@@ -1,0 +1,16 @@
+# Source publication: keep local documents and evidence out of Git.
+__pycache__/
+*.py[cod]
+.env*
+results/
+deliverables/
+archives/
+docs/
+/*.md
+!/README.md
+configs/authorization_receipts/
+configs/offline_acceptance_v1.json
+configs/v9_closure_record_v1.json*
+configs/v9_final_delivery_v1.json
+configs/v9_final_closure_v1.json
+configs/v9_document_cleanup_v1.json

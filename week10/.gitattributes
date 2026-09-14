@@ -1,0 +1,2 @@
+# Preserve exact bytes of V9 sources and hash-bound configuration files.
+* -text
