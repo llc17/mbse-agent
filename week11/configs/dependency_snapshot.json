@@ -1,0 +1,32 @@
+{
+  "schema_version": "v10-readonly-dependency-snapshot-1",
+  "files": {
+    "week9/src/pipeline.py": "f5e141410bb65ded2a760d3c11a5674225ca56b9d1004c09cbc631e21ef9b6aa",
+    "week9/src/modelica_templates.py": "2fd30c798f4e20b70247770192f8df41054343d231d0b584a01133826875cad2",
+    "week9/src/modelica_tool.py": "0177a410a7938fb626ed10f2fd7b89c4a15c8b4f152366bd9ed7f242ae0378d3",
+    "week9/src/hard_gate.py": "df404c54488fad3cb877cd45fa13a43e90b78da037e02e4663d26ef27be79d96",
+    "week9/src/quality_gate.py": "f7aed60617d5eac02e4276f741c02f5d7e58dd01fe83c96ccf009c06a9ec09c9",
+    "week9/src/parameter_normalization.py": "b27b4182aa20b06578b7b50b60222a5e70c2394f10b38ce8e1c4b6622f25491f",
+    "week9/src/traceability.py": "c18fa1cd3baa08f1df346f1180b06929b0b8d5a96c5f2d3e5d358c14a6fae1ad",
+    "week9/src/schemas.py": "d6f89c020e36d03d6fb02efc0a2c719aebb2dfa4b0462a3aa027a8e49141b7bf",
+    "week9/src/generation.py": "3e1b3c242a417699fdefc4277fe04c1885c9625f4fa501031dd6bec9187c359d",
+    "week9/src/repair_loop.py": "2a21a1028e6c4caa2ae9d60a67c03785c2fdb4baae6fbf1072816a035fde629b",
+    "week10/src/trace_graph.py": "7e64a9bad55da1fd67c600f6173c31cd4d998c9ac2020c575009a55d65ca2364",
+    "week10/src/graph_retrieval_v2.py": "b5987220b8a30c7c9f708a404876ef121ea303f8a1cc7a10fd4146ce3cd81e68",
+    "week10/src/graph_evidence_view.py": "164732e9c62cbe51e55e506e7b176cda140ce830442a4c2fcb4117f55f38af0c",
+    "week10/src/dependency_trace.py": "e18800f6efa04cfef576e4b81f08ed1e1443a816e0768003e5f2f5203cc8c64d",
+    "week9/configs/template_certifications.json": "06e891bb3444cfb22458420f6179b00fb89d90010fb788a9c703eb2a7d1aa4db"
+  },
+  "python": "3.13.3 (tags/v3.13.3:6280bb5, Apr  8 2025, 14:47:33) [MSC v.1943 64 bit (AMD64)]",
+  "dependencies": {
+    "mcp": "1.30.0",
+    "sysmlpy": "0.34.1",
+    "antlr4-python3-runtime": "4.13.2",
+    "httpx": "0.28.1",
+    "pydantic": "2.12.3",
+    "jsonschema": "4.26.0",
+    "psutil": "7.2.2"
+  },
+  "openmodelica": "1.25.7",
+  "sysml_scope": "ANTLR syntax and minimal structure; not full semantic validation"
+}

@@ -1,0 +1,2 @@
+# Preserve exact bytes of sources and hash-bound configuration files.
+* -text

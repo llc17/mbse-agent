@@ -1,0 +1,11 @@
+{
+  "schema_version": "v10-clarification-regression-1",
+  "purpose": "targeted workflow bug regression, does not replace the failed frozen 20/24 batch",
+  "max_model_calls": 3,
+  "retries": 0,
+  "shared_original_runtime_ledger": true,
+  "cases": [
+    {"id":"missing_new_values","turns":["需要 RC 低通，R 取 2 kOhm，截止频率选 500 Hz，请用已支持的公式计算电容。","激励补充为 3 V 的阶跃。"],"expected":{"resistance":2000,"cutoff_frequency":500,"input_voltage":3},"max_model_calls":2},
+    {"id":"conflict_new_values","turns":["建立 RC 低通：电阻 2 kOhm，截止频率 500 Hz，电容按公式求，阶跃输入要求 3 V，又同时要求 7 V。请先处理这两个电压要求。"],"expected":"explicit voltage clarification, no actionable proposal", "max_model_calls":1}
+  ]
+}

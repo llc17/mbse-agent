@@ -1,0 +1,17 @@
+.venv/
+__pycache__/
+*.pyc
+data/
+results/
+.env*
+projects/
+*.sqlite*
+*.db
+# Local summaries and work notes are not part of source publication.
+/*.md
+!/README.md
+# One-time scripts bound to local acceptance records.
+/scripts/resume_independent_acceptance.py
+/scripts/independent_acceptance.py
+/scripts/compile_failure_check.py
+/configs/independent_acceptance_20260916.json

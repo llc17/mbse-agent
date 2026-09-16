@@ -1,0 +1,26 @@
+{
+  "schema_version": "v10-online-acceptance-1",
+  "scope": "public development scenarios; not unseen generalization",
+  "repeats": 2,
+  "planned_sessions": 24,
+  "max_model_calls_per_session": 2,
+  "smoke_call_limit": 4,
+  "all_calls_share_runtime_budget": true,
+  "correct_intent_or_clarification_minimum": 22,
+  "unsafe_execution_allowed": 0,
+  "all_attempts_and_manual_corrections_in_denominator": true,
+  "cases": [
+    {"id":"rc_public","turns":["设计一个 RC 低通滤波器，截止频率 1kHz，电阻 1kΩ，电容根据截止频率计算，输入电压 5V 阶跃信号"],"expected":"prepare rc_filter"},
+    {"id":"rlc_public","turns":["设计一个 RLC 串联低通滤波器，截止频率 10kHz，电阻 100Ω，电感 10mH，电容根据谐振频率计算，输入电压 5V 正弦波"],"expected":"prepare rlc_filter"},
+    {"id":"dual_public","turns":["设计一个双房间热传导系统：房间A热容 300kJ/K，房间B热容 200kJ/K，两房间之间墙体热阻 0.05 K/W，房间A外墙热阻 0.03 K/W 连接到室外 35°C，房间B外墙热阻 0.04 K/W 连接到室外 35°C，两房间初始温度均为 20°C，室外温度保持不变"],"expected":"prepare thermal_dual_room"},
+    {"id":"rc_synonym","turns":["做个一阶电阻电容低通，拐点放在 1 kHz，串联电阻取 1 kOhm，电容请按这两个量算出来；激励用幅值 5 V 的阶跃。"],"expected":"prepare rc_filter"},
+    {"id":"rlc_synonym","turns":["我要串联电阻、电感和电容的低通网络：阻值 100 Ohm，电感量 10 mH，以 10 kHz 为谐振频率计算电容，输入是幅值 5 V 的正弦波。"],"expected":"prepare rlc_filter"},
+    {"id":"rc_voltage_change","baseline":"validated_rc_public","turns":["把输入电压改成 6 V，其余沿用当前版本。"],"expected":"prepare modification input_voltage"},
+    {"id":"rc_frequency_change","baseline":"validated_rc_public","turns":["截止频率换成 2 kHz，保持电阻和阶跃输入不变，按原公式联动电容。"],"expected":"prepare modification cutoff_frequency and derived capacitance"},
+    {"id":"evidence","baseline":"validated_rc_public","turns":["这个电容来自哪条需求？请展示两份模型的原始声明。"],"expected":"evidence query current project/version"},
+    {"id":"missing_then_supply","turns":["建 RC 低通，电阻 1 kOhm，截止频率 1 kHz，按公式计算电容。","输入使用 5 V 阶跃。"],"expected":"clarify then prepare rc_filter"},
+    {"id":"conflicting_voltage","turns":["建 RC 低通，电阻 1 kOhm，截止频率 1 kHz，按公式算电容，阶跃输入电压是 4 V，同时又要求输入电压 6 V。"],"expected":"clarify voltage conflict without execution"},
+    {"id":"unsupported_topology","turns":["设计一个机械齿轮传动系统，转速 600 rpm。"],"expected":"reject unsupported topology"},
+    {"id":"no_project","project":null,"turns":["把输入电压改为 6 V。"],"expected":"clarify project without modifying any project"}
+  ]
+}
