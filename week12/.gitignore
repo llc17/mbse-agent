@@ -1,0 +1,45 @@
+# Local execution, evidence and task state are not part of source publication.
+/results/
+/runs/
+/projects/
+/data/
+*.sqlite*
+*.db
+
+# Local environments, credentials and caches.
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.env*
+api.txt
+*.pem
+*.key
+
+# Compiled and generated execution artifacts; Modelica source (*.mo) is retained.
+*.exe
+*.dll
+*.o
+*.obj
+*.a
+*.lib
+*.mat
+*.csv
+*.png
+*.log
+*_init.xml
+*_info.json
+*_res.*
+
+# User-supplied originals and local history remain in the original workspace.
+/6轮上下楼仿真/
+/models/user-4w2n/
+/*.md
+!/README.md
+!/V11-CURRENT-STATE.md
+!/V11-交付验收总结.md
+/任务规划/*
+!/任务规划/任务规划-V11.md

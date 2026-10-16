@@ -1,0 +1,31 @@
+{
+  "key": "reference_parameter_execution",
+  "proposal_file": "reference-parameters-run-proposal.json",
+  "proposal_sha256": "632e35e71a53304b554611e89bb99963e51359048e7462a9b581416a142cfce2",
+  "authorization_file": "reference-parameters-run-authorization.json",
+  "authorization_sha256": "4946cadbd002c11dc0bde7feefc88c12249713300770f3f4ccba7b8eed03023f",
+  "snapshot_file": "ledger-after-reference-parameters-closed.json",
+  "snapshot_sha256": "13a646254f0064214cf8122c7de32169078af7addd3dd6840c4aad8ee7f724a7",
+  "scope_id": "reference-parameters-run-1dad0f04-776b-41aa-8b64-0c315d4b06e0",
+  "caps": {
+    "active_s": 1800,
+    "analysis_s": 920,
+    "external_s": 880,
+    "scenes": 1,
+    "scene_children": 3,
+    "repairs": 0,
+    "parents": 8,
+    "parent_own_s": 30,
+    "frontend": 1,
+    "frontend_s": 60,
+    "parse": 2,
+    "parse_s": 30,
+    "checks": 2,
+    "check_s": 20,
+    "product_requests": 0,
+    "product_tokens": 0,
+    "product_usd": 0
+  },
+  "csv_deadline_s": 900,
+  "artifact_prefix": "reference-parameters-run"
+}

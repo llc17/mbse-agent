@@ -1,0 +1,14 @@
+{
+  "scope": "public development, not formal acceptance or human approval",
+  "stair": {"riser_m": 0.08, "tread_m": 0.30, "count": 3, "width_m": 1.0},
+  "allowed_wheel_counts": [4, 6],
+  "max_modelica_runs": 18,
+  "max_online_requests": 0,
+  "max_online_tokens": 0,
+  "max_online_usd": 0,
+  "stop_rules": ["no automatic retry after timeout", "preserve each failed run", "stop after 18 scenario attempts"],
+  "numerics": {"solver": "dassl", "tolerance": 0.000001, "intervals": 4000, "contact_stiffness_n_m": 120000, "contact_damping_ns_m": 900, "friction_regularization_m_s": 0.02},
+  "criteria": {"completion": "rear axle beyond last riser plus wheel radius, all wheel centers above platform", "max_abs_pitch_rad": 0.75, "max_contact_penetration_m": 0.008, "min_loaded_support_margin_m": 0.005, "max_battery_current_a": "candidate limit", "steady_speed_relative_error": 0.10, "flat_energy_relative_error": 0.05},
+  "unsupported": ["lateral stability", "steering", "real tire calibration", "battery heat/lifetime", "rocker bogie and active swing arms"],
+  "mass_sources": "generic engineering estimates; no manufacturer curves claimed"
+}

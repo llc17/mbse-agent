@@ -1,0 +1,90 @@
+within;
+package V11ActiveClusterDriveSmooth
+  "Scoped carrier drive adaptation;not accepted component"
+  // Source V11ActiveClusterC3/package.mo SHA256 acff796551180f97b188abe427583b8c4b7179d0e15a39a44535a1ca87f5837a
+  import SI=Modelica.Units.SI;
+  import Rot=Modelica.Mechanics.Rotational;
+  model FiniteDrive
+    "Pair torque source, true moving bearing support, four quadrant gearbox/copper proxy"
+    parameter Integer multiplicity=2;
+    parameter Real gear=100;
+    parameter Real eta=0.8;
+    parameter Real kt=0.1;
+    parameter Real ke=0.1;
+    parameter Real Ra=0.2;
+    parameter Real driverEta=0.95;
+    parameter SI.Torque continuous=100;
+    parameter SI.Torque peak=150;
+    parameter SI.Time peakDuration=1;
+    parameter SI.AngularVelocity maxSpeed=0.25;
+    parameter SI.Power maxPower=1e6;
+    parameter SI.Voltage Vbus=48;
+    Rot.Interfaces.Flange_b shaft;
+    Rot.Interfaces.Support support;
+    Modelica.Blocks.Interfaces.RealInput command;
+    Modelica.Blocks.Interfaces.RealInput busScale;
+    Rot.Sources.Torque source(useSupport=true);
+    output SI.AngularVelocity wrel=der(shaft.phi)-der(support.phi);
+    output SI.Torque tau;
+    output SI.Power power=tau*wrel;
+    output SI.Current current;
+    output SI.Voltage voltage;
+    output SI.Power gearLoss;
+    output SI.Power copperLoss;
+    output SI.Power driverLoss;
+    output SI.Power dc;
+    output SI.Power requestedDC;
+    output SI.Time peakElapsed(start=0,fixed=true);
+    output Boolean clipped;
+    output SI.Torque baseTorque;
+    output SI.Torque localTorque;
+    output Real speedWeight;
+    output SI.Energy heat(start=0,fixed=true);
+    output SI.Energy copperEnergy(start=0,fixed=true);
+    output SI.Energy gearEnergy(start=0,fixed=true);
+    output SI.Energy driverEnergy(start=0,fixed=true);
+  protected
+    SI.Torque torqueBound;
+    SI.Torque requested;
+    Real branch;
+    SI.AngularVelocity motorSpeed;
+    SI.Current currentLimit;
+    SI.Current commandedCurrent;
+    SI.Current localCurrent;
+    SI.Power prePower;
+    SI.Power preGear;
+    SI.Power preCopper;
+    SI.Power preMechanical;
+  equation
+    motorSpeed=gear*wrel;
+    torqueBound=if peakElapsed < peakDuration then peak else continuous;
+    requested=max(-torqueBound,min(torqueBound,command/multiplicity));
+    branch=if requested*wrel >= 0 then 1/eta else eta;
+    currentLimit=peak/(gear*eta*kt);
+    commandedCurrent=branch*requested/(gear*kt);
+    localCurrent=max(-currentLimit,max((-Vbus-ke*motorSpeed)/Ra,
+      min(currentLimit,min((Vbus-ke*motorSpeed)/Ra,commandedCurrent))));
+    baseTorque=max(-maxPower/max(abs(wrel),1e-6),min(maxPower/max(abs(wrel),1e-6),localCurrent*gear*kt/branch));
+    speedWeight=V11ActiveClusterC3.smooth5(noEvent(max(0,min(1,(maxSpeed-abs(wrel))/(0.1*maxSpeed)))));
+    localTorque=if noEvent(baseTorque*wrel>0) then speedWeight*baseTorque else baseTorque;
+    prePower=multiplicity*localTorque*wrel;
+    preGear=if prePower>=0 then (1/eta-1)*prePower else (1-eta)*abs(prePower);
+    preMechanical=prePower+preGear;
+    preCopper=multiplicity*Ra*(branch*localTorque/(gear*kt))^2;
+    requestedDC=preMechanical+preCopper+(1/driverEta-1)*(abs(preMechanical)+preCopper);
+    tau=multiplicity*localTorque*max(0,min(1,busScale));
+    current=(if tau*wrel>=0 then 1/eta else eta)*tau/(multiplicity*gear*kt);
+    voltage=Ra*current+ke*motorSpeed;
+    gearLoss=if power>=0 then (1/eta-1)*power else (1-eta)*abs(power);
+    copperLoss=multiplicity*Ra*current^2;
+    driverLoss=(1/driverEta-1)*(abs(power+gearLoss)+copperLoss);
+    dc=power+gearLoss+copperLoss+driverLoss;
+    clipped=abs(tau-command)>1e-8;
+    der(peakElapsed)=if abs(tau)/multiplicity>continuous+1e-8 then 1 else 0;
+    der(heat)=gearLoss+copperLoss+driverLoss;
+    der(copperEnergy)=copperLoss; der(gearEnergy)=gearLoss; der(driverEnergy)=driverLoss;
+    source.tau=tau;
+    connect(source.flange,shaft);
+    connect(source.support,support);
+  end FiniteDrive;
+end V11ActiveClusterDriveSmooth;

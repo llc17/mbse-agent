@@ -1,0 +1,14 @@
+{
+  "library_version": "v11-composition-contract-1",
+  "status": "structural_contract_only",
+  "physical_backend": null,
+  "components": {
+    "rigid_body": {"version": "1-contract", "physical_implementation": null},
+    "tire_pair": {"version": "1-contract", "physical_implementation": null},
+    "fixed": {"version": "1-contract", "physical_implementation": null},
+    "passive_revolute": {"version": "1-contract", "physical_implementation": null},
+    "wheel_revolute": {"version": "1-contract", "physical_implementation": null},
+    "drive_pair": {"version": "1-contract", "physical_implementation": null},
+    "dc_supply": {"version": "1-contract", "physical_implementation": null}
+  }
+}
