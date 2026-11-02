@@ -1,0 +1,2 @@
+-r ../week11/requirements.txt
+numpy==2.3.4

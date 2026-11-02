@@ -1,0 +1,24 @@
+{
+  "schema": "v12-original300-readonly-regression-1",
+  "role": "REAL_HISTORICAL_FALSE_SUCCESS_NEGATIVE_ONLY",
+  "request_id": "console_20261022T042133_a4601db2ff",
+  "project_id": "prj_26b8778d077a4ddbad871ed46c25834c",
+  "task_id": "task_db3206359a8d47f8959282f1cdf3837d",
+  "version_id": "v000009",
+  "project_root": "runs/case-projects/case_5c9e662b4bfe403bb6fc",
+  "spec_digest": "149f41ef6f94223a5e6700ad58f6ed4fb8dc941d6ea34e51e896407f9e1232fa",
+  "source_sha256": "16ba8caa85d7bce136e475870d805ad7313febee8e195e71d1b80ecf1bf4af3d",
+  "manifest_sha256": "b835cff0d8be73576e72295eb24f88b5d7910a0832565e9a02524a4a8d1a3a3c",
+  "files": {
+    "frozen-model.mo": "16ba8caa85d7bce136e475870d805ad7313febee8e195e71d1b80ecf1bf4af3d",
+    "frozen-model.sysml": "971f74cddbf0e99d75d750e0e4603475ae4cfa3209fae12ee2ab1433235b90d7",
+    "spec.json": "d90d1edf93d41e381349f0985efaaf02ccd3f02a2fbc005863b6ad6843c44ab9",
+    "outcome.json": "857da85a825ace7f2aa6d254da690612bfee08ed08b69c2a1d721ded23d0b593",
+    "artifact-manifest.json": "b835cff0d8be73576e72295eb24f88b5d7910a0832565e9a02524a4a8d1a3a3c",
+    "tool/model_res.csv": "fc022fa78fe9954f8a5b56fe1fec6cd7072540e10257fca398a2e293fdf27901"
+  },
+  "historical_parameters": {"m": 105.0, "I_pitch": 20.0, "T_main_max": 60.0, "T_nose_max": 25.0, "stepH": 0.3, "stepD": 0.26},
+  "historical_task_status": "PASS",
+  "expected_current": {"status": "FAIL", "validity_status": "FAIL", "task_status": "UNKNOWN", "completion_status": "INVALID_MODEL"},
+  "limits": ["旧反例原车为105kg，不能改写成当前R03的85kg。", "只读重判原源码与CSV，不调车、不重新编译或仿真。", "不能用R03新300mm观察未完成替代本反例。"]
+}

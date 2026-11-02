@@ -1,0 +1,14 @@
+{
+  "source": "week13/sixwheel_fix/execution_scope.json#/acceptance_before_vehicle_run",
+  "acceptance_before_vehicle_run": {
+    "center_inside_solid_tolerance_m": 1e-7,
+    "maximum_contact_compression_over_radius": 0.20,
+    "normalized_energy_balance_residual_limit": 0.01,
+    "flat_static_support_relative_error_limit": 0.01,
+    "complete_exit_margin_m": 0.5,
+    "stall_observation_seconds": 5,
+    "stall_horizontal_position_range_m": 0.005,
+    "formal_observation_seconds": 300,
+    "normal_refinement_completion_time_relative_difference_limit": 0.05
+  }
+}

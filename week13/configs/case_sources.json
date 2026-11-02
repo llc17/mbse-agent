@@ -1,0 +1,75 @@
+{
+  "schema": "v12-inherited-sources-1",
+  "files": [
+    {
+      "source": "week12/src/car_domain/store_adapter.py",
+      "source_sha256": "b4f8cf32ee3b2afe6c5b461c40011dc540ecc7aeb1c3a02b28f4ad102d500330",
+      "copy": "week13/src/inherited/store_adapter.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "697db41887d13401ebb2d80c4b006c1ac4f0fa0cbd54cc271aeb15bcc3909d0d"
+    },
+    {
+      "source": "week12/src/car_domain/model_artifact.py",
+      "source_sha256": "f75a45064313606235b5b7488cf680e8e9cd2bfec50eecca7b808d40720e356b",
+      "copy": "week13/src/inherited/model_artifact.py",
+      "adaptations": "new-root imports; bounded settings/effective parameter metadata/full mission result; omit archived source repair route; independent contact validity cannot be overridden by signal observations",
+      "current_copy_sha256": "9ecf46ca4c9f4db3bb538b3cb3b4ec3cc7bd343c1b3a69410eeaaf89abd3e9da"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_baseline.py",
+      "source_sha256": "8d00cd6b6dd0c1d238564edcac3bc98cc2f038a519593bbc465e81e540dc79a8",
+      "copy": "week13/src/inherited/artifact_baseline.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "cca63417a4eb06f3f443e16cc0add1ab1ee49f7a7efbc18493f3436f117f42db"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_service.py",
+      "source_sha256": "26f434f54e1685f19df04320e74cb50654f1c59d8449e4b9c9e4e5beaaf97ceb",
+      "copy": "week13/src/inherited/artifact_service.py",
+      "adaptations": "new-root imports; bounded settings/effective parameter metadata/full mission result; omit archived source repair route",
+      "current_copy_sha256": "43d13beb679464a90d89fcceac998331e376b73ff41b61160b6325c159da88f5"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_history.py",
+      "source_sha256": "1aa48e9151502c5de0d433fb6810fc2182b45be40359c492a73f16da813e43b6",
+      "copy": "week13/src/inherited/artifact_history.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "97ecc356d777345068f32e34b6ae5307d8078f02be765975294300eb4f137a57"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_delivery.py",
+      "source_sha256": "86a541f65a1eb7d21fffc146d03c1031499360b78e87f11b47bd8c1c52fe07d0",
+      "copy": "week13/src/inherited/artifact_delivery.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "e0924fdc0c7407bed11d67819666c246121a824844fe9936a489919244a6b08b"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_sysml.py",
+      "source_sha256": "f9e7d4bf33c5b635c2949b482da03892e42fe1dff8cc3584f9bad43c04968a5b",
+      "copy": "week13/src/inherited/artifact_sysml.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "b792be996da2eb54698282e86c571ca9cdd005254c74113ce40de03a77391e12"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_trajectory.py",
+      "source_sha256": "96b2f06127a148c6e84267018acae0536ab7589bf39fd2205d00914d73d396e2",
+      "copy": "week13/src/inherited/artifact_trajectory.py",
+      "adaptations": "toolchain import/root contract only",
+      "current_copy_sha256": "4b8d4e8ee82098226942f54653f74c274ab041bfb8066b2582d7998fe3750c53"
+    },
+    {
+      "source": "week12/src/toolchain.py",
+      "source_sha256": "a1887ec3b63d38b00c30f50dec45aa2aa962c8bb08f7e4282043da6f51c53fc5",
+      "copy": "week13/src/inherited/toolchain_original.py",
+      "adaptations": "unchanged source; new wrapper sets output root/process runner/explicit solver settings",
+      "current_copy_sha256": "a1887ec3b63d38b00c30f50dec45aa2aa962c8bb08f7e4282043da6f51c53fc5"
+    },
+    {
+      "source": "week12/src/car_domain/artifact_worker.py",
+      "source_sha256": "d5c039f5bbbb6f90a305ecc4655a38486c114121a3b7ff380132cba47550d377",
+      "copy": "week13/src/case_worker.py",
+      "adaptations": "inherited new-root modules; owned new task subprocess; launch/deadline accounting; DASSL runner",
+      "current_copy_sha256": "e9b2f4f17e562aada08ba4e8ce6675f6c00ff5b9d7124141d28e167218eacac0"
+    }
+  ]
+}
